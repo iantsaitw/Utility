@@ -10,21 +10,19 @@ import threading
 import platform
 import ctypes
 import queue
-import math
 import re # Import regular expressions module
 
 from tkinterdnd2 import DND_FILES, TkinterDnD
 import psutil
 import sv_ttk
-import darkdetect
 
 # Import from our own modules
-from config import APP_VERSION, SHOW_SYSTEM_INFO, APP_TITLE, UI_FONT_FAMILY, UI_FONT_SIZE, LOG_FONT_FAMILY, LOG_FONT_SIZE, SHOW_RIGHT_PANEL
+from config import APP_VERSION, SHOW_SYSTEM_INFO, APP_TITLE, UI_FONT_FAMILY, UI_FONT_SIZE, LOG_FONT_FAMILY, LOG_FONT_SIZE
 from utils import resource_path, get_executable_dir, format_size
 import core_logic
 
 class TextSplitterApp(TkinterDnD.Tk):
-    def __init__(self, show_sys_info=SHOW_SYSTEM_INFO, show_right_panel=SHOW_RIGHT_PANEL):
+    def __init__(self, show_sys_info=SHOW_SYSTEM_INFO):
         if platform.system() == "Windows":
             myappid = f'mycompany.textsplitter.pro.{APP_VERSION}'
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
@@ -32,7 +30,6 @@ class TextSplitterApp(TkinterDnD.Tk):
         super().__init__()
         
         self.show_sys_info = show_sys_info
-        self.show_right_panel = show_right_panel
         self.default_font = (UI_FONT_FAMILY, UI_FONT_SIZE)
         self.log_font = (LOG_FONT_FAMILY, LOG_FONT_SIZE)
 
@@ -478,12 +475,11 @@ class TextSplitterApp(TkinterDnD.Tk):
         self.log_text.config(state="disabled")
 
     def log_message(self, message):
-        if not self.show_right_panel: return
         self.log_queue.put(message)
 
     def process_log_queue(self):
         if not self.log_text:
-            if self.show_right_panel: self.after(100, self.process_log_queue)
+            self.after(100, self.process_log_queue)
             return
         try:
             while True:
