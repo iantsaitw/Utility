@@ -1,13 +1,6 @@
 import ctypes
 import os
 import sys
-
-# 啟用 DPI 意識
-try:
-    ctypes.windll.user32.SetProcessDPIAware()
-except:
-    pass
-
 import tkinter as tk
 from tkinter import ttk, filedialog
 from ctypes import c_int, byref, sizeof
@@ -17,6 +10,12 @@ from project_tab import ProjectTab
 from terminal_widget import TerminalFrame
 from utils import resource_path
 from settings_dialog import SettingsDialog 
+
+# Enable High DPI awareness
+try:
+    ctypes.windll.user32.SetProcessDPIAware()
+except:
+    pass
 
 class App(tk.Tk):
     def __init__(self):
@@ -32,6 +31,7 @@ class App(tk.Tk):
         self.title(f"{config.APP_NAME} {'(Administrator)' if self.is_admin else ''}")
         self.geometry("1400x850") 
         
+        # Win11 Immersive Dark Mode
         try:
             self.update()
             hwnd = ctypes.windll.user32.GetAncestor(self.winfo_id(), 2)
@@ -49,6 +49,7 @@ class App(tk.Tk):
         self.setup_theme()
         self.setup_ui()
         
+        # Delay startup stabilization
         self.after(100, self._finalize_startup)
 
     def check_admin(self):
@@ -58,7 +59,7 @@ class App(tk.Tk):
             return False
 
     def _finalize_startup(self):
-        # 6:4 比例 (1400 * 0.6 = 840)
+        # Initial sash position (6:4 ratio)
         self.main_paned.sashpos(0, 840)
         self.scan_projects()
         self.deiconify()
@@ -69,6 +70,7 @@ class App(tk.Tk):
         self.apply_font_styles()
 
     def apply_font_styles(self):
+        """ Apply font settings from config to ttk.Style """
         font_fam = config.current_settings.get("font_family", "Segoe UI")
         font_size = 9
         self.style = ttk.Style()
@@ -81,6 +83,7 @@ class App(tk.Tk):
         self.style.configure("Bold.TLabel", font=(font_fam, font_size, "bold"))
 
     def setup_ui(self):
+        # Top Bar
         self.top_bar = ttk.Frame(self, padding=20)
         self.top_bar.pack(side=tk.TOP, fill=tk.X)
         ttk.Label(self.top_bar, text="Root Path:", style="Bold.TLabel").pack(side=tk.LEFT, padx=(0, 10))
@@ -91,31 +94,33 @@ class App(tk.Tk):
         ttk.Button(self.top_bar, text="Scan Projects", command=self.scan_projects).pack(side=tk.LEFT, padx=5)
         ttk.Button(self.top_bar, text="Settings", command=self.open_settings).pack(side=tk.LEFT, padx=5)
 
+        # Status Bar
         self.status_bar = ttk.Frame(self, padding=(10, 5))
         self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
         ttk.Label(self.status_bar, text=f"{config.APP_VERSION}").pack(side=tk.RIGHT)
         self.status_msg = tk.StringVar(value="Ready")
         ttk.Label(self.status_bar, textvariable=self.status_msg).pack(side=tk.LEFT)
 
+        # Main Paned Window
         self.main_paned = ttk.PanedWindow(self, orient=tk.HORIZONTAL)
         self.main_paned.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=15, pady=(0, 15))
 
-        # 左側：專案分頁區塊
+        # Left Pane: Project Tabs
         self.notebook = ttk.Notebook(self.main_paned)
         self.main_paned.add(self.notebook, weight=6)
         self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_changed)
 
-        # 右側：終端機區塊
+        # Right Pane: Terminal
         term_container = ttk.Frame(self.main_paned)
         self.main_paned.add(term_container, weight=4)
         
-        # [修改] 終端機初始目錄直接使用 Root Path
+        # Initialize terminal at Root Path
         term_dir = self.root_dir if os.path.exists(self.root_dir) else os.getcwd()
         self.terminal = TerminalFrame(term_container, term_dir)
         self.terminal.pack(fill=tk.BOTH, expand=True)
 
     def sync_terminal_dir(self, path):
-        """ 移除同步切換邏輯，僅更新狀態列 """
+        """ Update status bar when a driver is selected """
         if os.path.exists(path):
             self.status_msg.set(f"Selected: {os.path.basename(path)}")
 
@@ -136,7 +141,7 @@ class App(tk.Tk):
             self.root_entry.delete(0, tk.END)
             self.root_entry.insert(0, d)
             config.save_settings({"root_dir": d})
-            self.root_dir = d # 更新記憶體中的路徑
+            self.root_dir = d
             self.scan_projects()
 
     def open_settings(self):
@@ -173,7 +178,7 @@ class App(tk.Tk):
                     self.notebook.select(tab_id)
                     break
         
-        # 啟動終端機 (如果尚未啟動)
+        # Start terminal if not already running
         if not self.terminal.cmd_hwnd:
             self.terminal.start_embedded_cmd()
 

@@ -1,4 +1,3 @@
-# project_tab.py
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import os
@@ -10,9 +9,9 @@ import driver_utils
 from ui_factory import UIFactory
 
 class ProjectTab(ttk.Frame):
-    """ 代表一個 Project 的分頁 """
+    """ Represents a single project tab """
     def __init__(self, master, project_path, app_root=None, **kwargs):
-        super().__init__(master, padding=15, **kwargs) # 減少外邊距
+        super().__init__(master, padding=15, **kwargs)
         self.project_path = project_path
         self.app_root = app_root
         self.selected_driver_path = None
@@ -23,28 +22,30 @@ class ProjectTab(ttk.Frame):
         
         self.setup_ui()
         
+        # Restore splitter position after UI rendered
         self.after(500, self.restore_sash_pos)
         self.after(100, self.refresh_driver_list)
 
     def sync_filter_ui(self):
+        """ Sync filter radio buttons with global settings """
         global_mode = config.current_settings.get("filter_mode", "All")
         if self.filter_var.get() != global_mode:
             self.filter_var.set(global_mode)
             self.update_tree_view()
 
     def setup_ui(self):
-        # 1. Top
+        # Top Bar
         top_frame = UIFactory.create_frame(self)
         top_frame.pack(side=tk.TOP, fill=tk.X, pady=(0, 10)) 
         
         UIFactory.create_header_label(top_frame, text=os.path.basename(self.project_path)).pack(side=tk.LEFT)
         UIFactory.create_secondary_button(top_frame, "📂 Explorer", self.open_project_folder).pack(side=tk.RIGHT)
 
-        # 3. Bottom (Backup & Export)
+        # Bottom Area (Backup & Export)
         op_frame = ttk.Frame(self)
         op_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=(15, 0))
 
-        # Backup Area
+        # Backup Section
         bf_frame = ttk.LabelFrame(op_frame, text=" Backup ", padding=10)
         bf_frame.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
         
@@ -53,7 +54,7 @@ class ProjectTab(ttk.Frame):
         self.suffix_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
         UIFactory.create_secondary_button(bf_frame, "Run Backup", self.do_backup).pack(side=tk.LEFT)
 
-        # Export Area
+        # Export Section
         cp_frame = ttk.LabelFrame(op_frame, text=" Export ", padding=10)
         cp_frame.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(10, 0))
         
@@ -64,12 +65,12 @@ class ProjectTab(ttk.Frame):
         UIFactory.create_secondary_button(cp_frame, "Folder", lambda: self.do_export("folder")).pack(side=tk.LEFT, padx=2)
         UIFactory.create_secondary_button(cp_frame, "Sys", lambda: self.do_export("sys")).pack(side=tk.LEFT, padx=2)
 
-        # 2. Middle (Split View)
+        # Middle Split View
         self.paned = ttk.PanedWindow(self, orient=tk.VERTICAL)
         self.paned.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.paned.bind("<ButtonRelease-1>", self.on_sash_release)
 
-        # --- Driver Versions Pane ---
+        # Driver Versions Pane
         driver_pane = ttk.LabelFrame(self.paned, text=" Driver Versions ", padding=10)
         self.paned.add(driver_pane, weight=1)
 
@@ -98,7 +99,6 @@ class ProjectTab(ttk.Frame):
         self.driver_list.column("date", width=140)
         self.driver_list.column("path", width=300)
         
-        # 使用 <<TreeviewSelect>> 事件來觸發選取與同步
         self.driver_list.bind("<<TreeviewSelect>>", self.on_driver_select)
 
         d_scroll = ttk.Scrollbar(d_list_frame, orient="vertical", command=self.driver_list.yview)
@@ -106,7 +106,7 @@ class ProjectTab(ttk.Frame):
         self.driver_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         d_scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
-        # --- Files Pane ---
+        # Files Pane
         file_pane = ttk.LabelFrame(self.paned, text=" Files ", padding=10)
         self.paned.add(file_pane, weight=1)
 
@@ -148,6 +148,7 @@ class ProjectTab(ttk.Frame):
 
     # === Logic ===
     def on_sash_release(self, event):
+        """ Save splitter ratio when user releases the mouse """
         try:
             total_height = self.paned.winfo_height()
             if total_height <= 1: return
@@ -160,6 +161,7 @@ class ProjectTab(ttk.Frame):
         except: pass
 
     def restore_sash_pos(self):
+        """ Restore splitter position from settings """
         try:
             ratio = config.current_settings.get("split_ratio", 0.6)
             total_height = self.paned.winfo_height()
@@ -170,6 +172,7 @@ class ProjectTab(ttk.Frame):
         except: pass
 
     def refresh_export_path(self):
+        """ Sync export path entry with global settings """
         new_path = config.current_settings.get("export_dir", "")
         current_val = self.dest_entry.get()
         if new_path != current_val:
@@ -177,11 +180,13 @@ class ProjectTab(ttk.Frame):
             self.dest_entry.insert(0, new_path)
 
     def on_filter_change(self):
+        """ Handle radio button filter change """
         mode = self.filter_var.get()
         config.save_settings({"filter_mode": mode})
         self.update_tree_view()
 
     def sort_driver_list(self, col, reverse):
+        """ Sort driver list by column """
         col_map = {"folder": 0, "version": 1, "date": 2, "path": 3}
         idx = col_map.get(col, 0)
         self.cached_items.sort(key=lambda x: x[idx].lower(), reverse=reverse)
@@ -190,6 +195,7 @@ class ProjectTab(ttk.Frame):
         self.update_tree_view()
 
     def update_tree_view(self):
+        """ Refresh Treeview display based on filter """
         for item in self.driver_list.get_children(): self.driver_list.delete(item)
         filter_mode = self.filter_var.get() 
         for item in self.cached_items:
@@ -199,6 +205,7 @@ class ProjectTab(ttk.Frame):
                 self.driver_list.insert("", "end", values=display_values)
 
     def refresh_driver_list(self):
+        """ Scan project directory for driver versions """
         for item in self.driver_list.get_children(): self.driver_list.delete(item)
         for item in self.file_list.get_children(): self.file_list.delete(item)
         self.selected_driver_path = None
@@ -229,6 +236,7 @@ class ProjectTab(ttk.Frame):
         self.update_tree_view()
 
     def on_driver_select(self, event):
+        """ Handle driver version selection """
         selection = self.driver_list.selection()
         if not selection: return
         item = self.driver_list.item(selection[0])
@@ -238,11 +246,12 @@ class ProjectTab(ttk.Frame):
         self.btn_sign_driver.state(["!disabled"])
         self.refresh_file_list(full_path)
         
-        # 同步終端機目錄
+        # Notify terminal about path selection
         if self.app_root and hasattr(self.app_root, "sync_terminal_dir"):
             self.app_root.sync_terminal_dir(full_path)
 
     def sort_file_list(self, col, reverse):
+        """ Sort file list by column """
         col_map = {"name": 0, "version": 1, "signature": 2, "date": 5, "size": 6} 
         idx = col_map.get(col, 0)
         self.file_data_cache.sort(key=lambda x: (not x[7], x[idx] if isinstance(x[idx], (int, float)) else x[idx].lower()), reverse=reverse)
@@ -251,12 +260,14 @@ class ProjectTab(ttk.Frame):
         self.update_file_list_view()
 
     def update_file_list_view(self):
+        """ Refresh file Treeview display """
         for item in self.file_list.get_children(): self.file_list.delete(item)
         for item in self.file_data_cache:
             display_values = (item[0], item[1], item[2], item[3], item[4])
             self.file_list.insert("", "end", values=display_values)
 
     def refresh_file_list(self, path):
+        """ List all files in the selected driver path """
         self.file_data_cache = []
         if path and os.path.exists(path):
             try:
@@ -286,6 +297,7 @@ class ProjectTab(ttk.Frame):
         self.sort_file_list("name", False)
 
     def do_sign_driver(self):
+        """ Perform digital signing using signtool.exe """
         if not self.selected_driver_path: return
         pfx_path = config.current_settings.get("pfx_path", "")
         if not pfx_path or not os.path.exists(pfx_path):
@@ -327,6 +339,7 @@ class ProjectTab(ttk.Frame):
         if self.selected_driver_path and os.path.exists(self.selected_driver_path): os.startfile(self.selected_driver_path)
 
     def on_file_double_click(self, event):
+        """ Open file/folder on double click """
         if not self.selected_driver_path: return
         selection = self.file_list.selection()
         if not selection: return
@@ -335,6 +348,7 @@ class ProjectTab(ttk.Frame):
         if os.path.exists(full_path): os.startfile(full_path)
 
     def do_backup(self):
+        """ Create a timestamped copy of the selected driver folder """
         if not self.selected_driver_path: return
         src = self.selected_driver_path
         dest = os.path.join(os.path.dirname(src), f"{os.path.basename(src)}{self.suffix_entry.get()}")
@@ -355,6 +369,7 @@ class ProjectTab(ttk.Frame):
             config.save_settings({"export_dir": d})
 
     def do_export(self, mode):
+        """ Export driver files to the destination directory """
         if not self.selected_driver_path: return
         src = self.selected_driver_path
         dest_root = self.dest_entry.get()

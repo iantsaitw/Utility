@@ -7,7 +7,7 @@ import time
 import threading
 import config
 
-# Win32 接口與常數
+# Win32 APIs and Constants
 user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
 GWL_STYLE = -16
@@ -23,6 +23,7 @@ SWP_NOMOVE = 0x0002
 SWP_NOSIZE = 0x0001
 
 def find_vs2022_bat():
+    """ Try to locate VS 2022 Developer Command Prompt batch file """
     try:
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -41,6 +42,7 @@ def find_vs2022_bat():
     return None
 
 class TerminalFrame(ttk.Frame):
+    """ A Frame that embeds a Win32 CMD window """
     def __init__(self, master, work_dir, **kwargs):
         super().__init__(master, **kwargs)
         self.work_dir = work_dir
@@ -60,11 +62,14 @@ class TerminalFrame(ttk.Frame):
         self.container = tk.Frame(self, bg="black", takefocus=0)
         self.container.pack(fill=tk.BOTH, expand=True)
         self.container.bind("<Configure>", self.on_resize)
+        
+        # Focus recovery bindings
         self.container.bind("<Button-1>", self.force_focus)
         self.container.bind("<FocusIn>", self.force_focus)
         self.container.bind("<Enter>", self.force_focus)
 
     def force_focus(self, event=None):
+        """ Forcefully give keyboard focus to the embedded Win32 window """
         if self.cmd_hwnd:
             gui_thread = kernel32.GetCurrentThreadId()
             cmd_thread = user32.GetWindowThreadProcessId(self.cmd_hwnd, None)
@@ -77,9 +82,9 @@ class TerminalFrame(ttk.Frame):
                 user32.SetFocus(self.cmd_hwnd)
 
     def restart_terminal(self, new_dir=None):
+        """ Close current terminal and start a new one in the specified directory """
         if self.is_embedding: return
         
-        # 如果路徑沒變且已經有視窗，就不重啟
         if new_dir and new_dir == self.work_dir and self.cmd_hwnd:
             return
 
@@ -88,7 +93,6 @@ class TerminalFrame(ttk.Frame):
 
         self.btn_restart.configure(text="🔄 Starting...", state="disabled")
         
-        # 關閉舊的
         if self.cmd_hwnd:
             try: user32.PostMessageW(self.cmd_hwnd, 0x0010, 0, 0)
             except: pass
@@ -98,6 +102,7 @@ class TerminalFrame(ttk.Frame):
         self.start_embedded_cmd()
 
     def start_embedded_cmd(self):
+        """ Spawn a new CMD process with a unique title for embedding """
         if self.is_embedding: return
         self.is_embedding = True
         
@@ -105,9 +110,7 @@ class TerminalFrame(ttk.Frame):
         unique_id = f"{int(time.time() * 1000) % 1000000:06d}"
         unique_title = f"DriverDeck_{unique_id}"
         
-        # 核心方向修正：直接在啟動時指定工作目錄
         if vs_bat:
-            # /K 表示執行完指令後保留視窗，cd /d 確保目錄正確
             cmd_cmd = f'start "{unique_title}" cmd.exe /K "title {unique_title} && cd /d \"{self.work_dir}\" && call \"{vs_bat}\""'
         else:
             cmd_cmd = f'start "{unique_title}" cmd.exe /K "title {unique_title} && cd /d \"{self.work_dir}\""'
@@ -116,12 +119,14 @@ class TerminalFrame(ttk.Frame):
         threading.Thread(target=self.wait_and_embed, args=(unique_title,), daemon=True).start()
 
     def wait_and_embed(self, title):
+        """ Search for the window by title and reparent it to the Tkinter frame """
         try:
             hwnd = 0
             for i in range(100):
                 hwnd = user32.FindWindowW(None, title)
                 if hwnd: break
                 
+                # Fallback: Enum windows if FindWindow fails
                 found_hwnds = []
                 def enum_cb(h, l_ptr):
                     buf = ctypes.create_unicode_buffer(512)
@@ -149,6 +154,7 @@ class TerminalFrame(ttk.Frame):
                 
                 if parent_hwnd:
                     user32.ShowWindow(self.cmd_hwnd, 1)
+                    # Modify style: remove caption/border, add child attribute
                     style = user32.GetWindowLongW(self.cmd_hwnd, GWL_STYLE)
                     user32.SetWindowLongW(self.cmd_hwnd, GWL_STYLE, (style & ~WS_CAPTION & ~WS_THICKFRAME & ~WS_POPUP) | WS_CHILD)
                     user32.SetParent(self.cmd_hwnd, parent_hwnd)
@@ -163,6 +169,7 @@ class TerminalFrame(ttk.Frame):
         self.is_embedding = False
 
     def on_resize(self, event=None, is_first=False):
+        """ Keep embedded window size synced with the Tkinter frame """
         if self.cmd_hwnd:
             if not user32.IsWindow(self.cmd_hwnd):
                 self.cmd_hwnd = None

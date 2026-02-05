@@ -1,4 +1,3 @@
-# settings_dialog.py
 import tkinter as tk
 from tkinter import ttk, colorchooser, font, filedialog
 import os
@@ -6,11 +5,12 @@ import config
 from utils import resource_path
 
 class SettingsDialog(tk.Toplevel):
+    """ Modal dialog for application settings """
     def __init__(self, parent, callback):
         super().__init__(parent)
         self.callback = callback
         self.title("Settings")
-        self.geometry("450x520") # 再拉高一點
+        self.geometry("450x520")
         self.resizable(False, False)
         
         icon_file = resource_path("icon.ico")
@@ -27,6 +27,7 @@ class SettingsDialog(tk.Toplevel):
         self.center_window(parent)
 
     def center_window(self, parent):
+        """ Center the dialog relative to the parent window """
         x = parent.winfo_x() + (parent.winfo_width() // 2) - (450 // 2)
         y = parent.winfo_y() + (parent.winfo_height() // 2) - (520 // 2)
         self.geometry(f"+{x}+{y}")
@@ -73,7 +74,7 @@ class SettingsDialog(tk.Toplevel):
         self.pfx_browse_btn = ttk.Button(pfx_frame, text="Browse", width=8, command=self.browse_pfx)
         self.pfx_browse_btn.pack(side=tk.LEFT)
 
-        # 5. [新增] SignTool Path
+        # 5. SignTool Path
         ttk.Label(main_frame, text="SignTool.exe Path (Optional)", font=title_font).pack(anchor="w", pady=(0, 5))
         st_frame = ttk.Frame(main_frame)
         st_frame.pack(fill=tk.X, pady=(0, 15))
@@ -82,7 +83,7 @@ class SettingsDialog(tk.Toplevel):
         self.st_browse_btn = ttk.Button(st_frame, text="Browse", width=8, command=self.browse_signtool)
         self.st_browse_btn.pack(side=tk.LEFT)
 
-        # Bottom
+        # Bottom Buttons
         spacer = ttk.Frame(main_frame)
         spacer.pack(fill=tk.Y, expand=True)
         
@@ -93,19 +94,18 @@ class SettingsDialog(tk.Toplevel):
         ttk.Button(btn_frame, text="Apply & Save", style="Accent.TButton", command=self.save_and_close).pack(side=tk.RIGHT)
 
     def load_current_values(self):
+        """ Populate fields with current configuration """
         self.theme_var.set(config.current_settings.get("theme_mode", "Dark"))
         self.font_var.set(config.current_settings.get("font_family", "Segoe UI"))
         self.color_entry.delete(0, tk.END)
         self.color_entry.insert(0, config.current_settings.get("accent_color", "#4db6ac"))
-        
         self.pfx_entry.delete(0, tk.END)
         self.pfx_entry.insert(0, config.current_settings.get("pfx_path", ""))
-        
-        # Load SignTool
         self.st_entry.delete(0, tk.END)
         self.st_entry.insert(0, config.current_settings.get("signtool_path", ""))
 
     def pick_color(self):
+        """ Show color picker dialog """
         color = colorchooser.askcolor(initialcolor=self.color_entry.get(), parent=self)
         if color[1]:
             self.color_entry.delete(0, tk.END)
@@ -113,6 +113,7 @@ class SettingsDialog(tk.Toplevel):
             self.focus_force()
 
     def browse_pfx(self):
+        """ Show file dialog for PFX certificate """
         f = filedialog.askopenfilename(filetypes=[("PFX Files", "*.pfx"), ("All Files", "*.*")])
         if f:
             self.pfx_entry.delete(0, tk.END)
@@ -120,6 +121,7 @@ class SettingsDialog(tk.Toplevel):
             self.focus_force()
 
     def browse_signtool(self):
+        """ Show file dialog for signtool.exe """
         f = filedialog.askopenfilename(filetypes=[("Executable", "signtool.exe"), ("All Files", "*.*")])
         if f:
             self.st_entry.delete(0, tk.END)
@@ -127,6 +129,7 @@ class SettingsDialog(tk.Toplevel):
             self.focus_force()
 
     def save_and_close(self):
+        """ Collect input values, save to config, and close dialog """
         new_settings = {
             "theme_mode": self.theme_var.get(),
             "font_family": self.font_var.get(),

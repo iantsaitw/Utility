@@ -1,4 +1,3 @@
-# driver_utils.py
 import os
 import ctypes
 from ctypes import wintypes
@@ -8,6 +7,7 @@ import datetime
 import config 
 
 def get_file_version(path):
+    """ Read Windows file version using Win32 API """
     try:
         if not os.path.exists(path): return ""
         size = ctypes.windll.version.GetFileVersionInfoSizeW(path, None)
@@ -37,9 +37,10 @@ def get_file_version(path):
     except Exception: return ""
 
 def find_signtool():
+    """ Locate signtool.exe in Windows Kits directory """
     base_paths = [
         r"C:\Program Files (x86)\Windows Kits\10\bin",
-        r"C:\Program Files\Windows Kits\10\bin"
+        r"C:\Program Files (x86)\Windows Kits\8.1\bin"
     ]
     candidates = []
     for base in base_paths:
@@ -53,6 +54,7 @@ def find_signtool():
     return None
 
 def check_file_signature(path):
+    """ Verify digital signature and extract signer names """
     tool = config.current_settings.get("signtool_path", "")
     if not tool or not os.path.exists(tool):
         tool = find_signtool()
@@ -90,6 +92,7 @@ def check_file_signature(path):
                 is_timestamp_section = True
                 continue
 
+            # Look for common tokens in different locales
             token = None
             if "Issued to:" in line: token = "Issued to:"
             elif "發給:" in line: token = "發給:"
@@ -116,10 +119,12 @@ def check_file_signature(path):
         return "Error"
 
 def format_size(size):
+    """ Format byte size to human readable string """
     for unit in ['B', 'KB', 'MB', 'GB']:
         if size < 1024: return f"{size:.1f} {unit}"
         size /= 1024
     return f"{size:.1f} TB"
 
 def get_time_suffix():
+    """ Return current timestamp as suffix string """
     return "_" + datetime.datetime.now().strftime("%Y%m%d_%H%M")
