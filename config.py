@@ -10,7 +10,15 @@ APP_VERSION = "v5.3.1 (Clean Config)"
 
 APP_ID = f"mycompany.tools.{APP_NAME.replace(' ', '').lower()}.v5_3"
 
-SETTINGS_FILE = "settings.json"
+import sys
+
+# 取得程式執行目錄 (相容開發環境與打包後的 EXE)
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+SETTINGS_FILE = os.path.join(BASE_DIR, "settings.json")
 TARGET_BATCH_FILE = "setenv-for-windows-msbuild-system.bat"
 
 # 定義分類與路徑
@@ -58,9 +66,17 @@ COLOR_SCROLL_ARROW = "#999999"
 COLOR_ACCENT = "#4db6ac"
 COLOR_ACCENT_HOVER = "#80cbc4"
 
+# === Terminal Colors ===
+COLOR_TERM_BG = "#1e1e1e"
+COLOR_TERM_FG = "#d4d4d4"
+COLOR_ERROR = "#f44336"
+COLOR_SYSTEM = "#4db6ac"
+COLOR_INPUT = "#ffffff"
+
 FONT_UI = ("Segoe UI", 9)
 FONT_BOLD = ("Segoe UI", 9, "bold")
 FONT_LARGE = ("Segoe UI", 11, "bold")
+FONT_TERM = ("Consolas", 10)
 
 def load_settings():
     global current_settings
@@ -69,7 +85,8 @@ def load_settings():
     global COLOR_HEADER_BG, COLOR_HEADER_FG, COLOR_HEADER_BORDER
     global COLOR_SCROLL_BG, COLOR_SCROLL_BG_HOVER, COLOR_SCROLL_TROUGH, COLOR_SCROLL_ARROW
     global COLOR_ACCENT, COLOR_ACCENT_HOVER
-    global FONT_UI, FONT_BOLD, FONT_LARGE
+    global COLOR_TERM_BG, COLOR_TERM_FG, COLOR_ERROR, COLOR_SYSTEM, COLOR_INPUT
+    global FONT_UI, FONT_BOLD, FONT_LARGE, FONT_TERM
 
     if os.path.exists(SETTINGS_FILE):
         try:
@@ -101,6 +118,12 @@ def load_settings():
         COLOR_SCROLL_BG_HOVER = "#a6a6a6"
         COLOR_SCROLL_TROUGH = "#f0f0f0"
         COLOR_SCROLL_ARROW = "#666666"
+
+        COLOR_TERM_BG = "#ffffff"
+        COLOR_TERM_FG = "#333333"
+        COLOR_ERROR = "#d32f2f"
+        COLOR_SYSTEM = "#00796b"
+        COLOR_INPUT = "#000000"
     else:
         COLOR_BG_DARK = "#1e1e1e"
         COLOR_BG_LIGHT = "#252526"
@@ -116,6 +139,12 @@ def load_settings():
         COLOR_SCROLL_BG_HOVER = "#4f4f4f"
         COLOR_SCROLL_TROUGH = "#252526"
         COLOR_SCROLL_ARROW = "#d4d4d4"
+
+        COLOR_TERM_BG = "#1e1e1e"
+        COLOR_TERM_FG = "#d4d4d4"
+        COLOR_ERROR = "#f44336"
+        COLOR_SYSTEM = "#4db6ac"
+        COLOR_INPUT = "#ffffff"
 
     COLOR_ACCENT = current_settings["accent_color"]
     COLOR_ACCENT_HOVER = COLOR_ACCENT 

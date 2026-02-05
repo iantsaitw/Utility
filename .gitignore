@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / Build
+build/
+dist/
+*.spec
+
+# Debug/Sync Logs
+*.log
+sync_debug.txt
+settings.json
+app.manifest

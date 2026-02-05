@@ -1,12 +1,12 @@
 {
     "theme_mode": "Dark",
     "font_family": "Segoe UI",
-    "accent_color": "#00a400",
+    "accent_color": "#4db6ac",
     "root_dir": "E:\\Project",
-    "export_dir": "F:/",
+    "export_dir": "D:/",
     "pfx_path": "E:/Project/cn3.pfx",
     "signtool_path": "",
-    "last_tab": "rtwlan_19",
-    "filter_mode": "All",
-    "split_ratio": 0.5506756756756757
+    "last_tab": "rtwlan_24",
+    "filter_mode": "PCIE",
+    "split_ratio": 0.5503731343283582
 }
