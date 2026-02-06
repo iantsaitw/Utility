@@ -1,42 +1,42 @@
-# Driver Deck - 專案狀態紀錄
+# Driver Deck - Project Status Record
 
-## 專案概覽
-Driver Deck 是一個專用於管理與建置 Windows 驅動程式的 GUI 工具，採用 Python + Tkinter + sv-ttk 構建。
+## Project Overview
+Driver Deck is a GUI tool specifically designed for managing and building Windows drivers, built with Python, Tkinter, and sv-ttk.
 
-## 當前版本特性 (v5.3.2 - UI 優化版)
+## Current Version Features (v5.3.2 - UI Optimized)
 
-### 1. 介面佈局 (UI Layout)
-- **佈局對調**：將「專案管理分頁」移至左側，「終端機」移至右側，優化視覺重心。
-- **視窗尺寸**：預設 geometry 設為 `1400x850`。
-- **欄位優化**：優化「Files」清單欄位寬度，設定 `Name` 與 `Digital Signature` 自動伸縮，防止啟動時欄位被擠壓。
-- **按鈕簡化**：將 Export 區域的按鈕文字從「Export Folder/Sys」簡化為「Folder/Sys」。
-- **主題樣式**：使用 `sv-ttk` 提供深色模式，並透過 Win32 API 啟用 Windows 11 沉浸式標題列。
+### 1. UI Layout
+- **Layout Swap**: Moved "Project Management Tab" to the left and "Terminal" to the right to optimize visual focus.
+- **Window Size**: Default geometry set to `1400x850`.
+- **Column Optimization**: Optimized the width of the "Files" list columns. Set `Name` and `Digital Signature` to auto-expand to prevent columns from being squeezed at startup.
+- **Button Simplification**: Simplified the button text in the Export area from "Export Folder/Sys" to "Folder/Sys".
+- **Theme Style**: Uses `sv-ttk` for dark mode and enables Windows 11 immersive title bar via Win32 API.
 
-### 2. 整合終端機 (Terminal Widget)
-- **Win32 嵌入**：透過 `SetParent` 與樣式修改將 CMD 視窗完美嵌入 Tkinter。
-- **強效焦點管理**：
-    - 實作 `AttachThreadInput` 技術，確保點擊或進入終端機區域時，鍵盤輸入能即時導向至內嵌的 CMD。
-    - 支援 `Tab` 鍵輪巡：攔截 Tkinter 的 Tab 焦點切換，將 Tab 鍵傳遞給 CMD 進行路徑補全。
-- **預設目錄**：終端機固定開啟於設定的「Root Path」(如 `E:\Project`)，確保啟動穩定性。
+### 2. Integrated Terminal (Terminal Widget)
+- **Win32 Embedding**: Seamlessly embedded the CMD window into Tkinter via `SetParent` and style modifications.
+- **Robust Focus Management**:
+    - Implemented `AttachThreadInput` technology to ensure keyboard input is immediately directed to the embedded CMD when clicking or entering the terminal area.
+    - Support for `Tab` key cycling: Intercepts Tkinter's Tab focus switching and passes the Tab key to CMD for path completion.
+- **Default Directory**: The terminal consistently opens at the configured "Root Path" (e.g., `E:\Project`) to ensure startup stability.
 
-### 3. 設定持久化 (Settings Persistence)
-- **絕對路徑修復**：修正 `settings.json` 的儲存路徑為 EXE 所在目錄，確保 PFX 等設定在不同啟動方式下皆能正確保留。
+### 3. Settings Persistence
+- **Absolute Path Fix**: Corrected the storage path of `settings.json` to the EXE directory, ensuring that settings like PFX are correctly preserved regardless of how the app is launched.
 
-### 4. 建置系統 (Build System)
-- **避開檔案鎖定**：`build.bat` 採用「暫存檔名建置法」。
-    - 建置時先產出 `DriverDeck_Pro.exe` 以避開 Windows 系統對舊檔案的資源鎖定。
-    - 建置成功後自動更名回 `Driver Deck.exe`，確保資源嵌入成功。
+### 4. Build System
+- **File Lock Avoidance**: `build.bat` uses a "temporary filename build" strategy.
+    - During build, it first produces `DriverDeck_Pro.exe` to avoid resource locks on old files by Windows.
+    - After a successful build, it automatically renames it back to `Driver Deck.exe`, ensuring successful resource embedding.
 
-## 關鍵檔案說明
-- `main.py`: 應用程式入口，處理佈局、DPI 意識與核心元件初始化。
-- `terminal_widget.py`: 核心 Win32 視窗操作，處理嵌入、焦點管理與 Tab 鍵傳遞。
-- `config.py`: 全域設定、顏色定義與 `settings.json` 絕對路徑處理。
-- `project_tab.py`: 驅動清單邏輯、文件列表渲染與備份/匯出功能。
-- `build.bat`: 穩定版 PyInstaller 打包腳本。
+## Key File Descriptions
+- `main.py`: Application entry point, handles layout, DPI awareness, and core component initialization.
+- `terminal_widget.py`: Core Win32 window operations, handling embedding, focus management, and Tab key passing.
+- `config.py`: Global settings, color definitions, and absolute path handling for `settings.json`.
+- `project_tab.py`: Driver list logic, file list rendering, and backup/export functions.
+- `build.bat`: Stable PyInstaller packaging script.
 
-## 開發備註
-- **管理員權限**：在管理員模式下，Windows 核心會限制部分 UI 渲染（如 Scrollbar 顏色），目前策略以功能穩定性為優先。
-- **事件機制**：列表選取使用 `<<TreeviewSelect>>` 事件。
+## Development Notes
+- **Administrator Privileges**: In Administrator mode, the Windows kernel limits some UI rendering (e.g., scrollbar color). Current strategy prioritizes functional stability.
+- **Event Mechanism**: List selection uses the `<<TreeviewSelect>>` event.
 
 ---
-*最後更新日期：2026-02-05*
+*Last Updated: 2026-02-05*
