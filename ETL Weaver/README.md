@@ -43,4 +43,9 @@
    ```
 
 ---
+
+## 📜 Version History
+Detailed version history and changes are documented in [CHANGELOG.md](./CHANGELOG.md).
+
+---
 *License: Internal Tool - Realtek Semiconductor Corp.*

@@ -46,4 +46,9 @@ Unlike standard text-based terminals, Driver Deck implements low-level **Win32 w
    Run `build.bat` for a production-ready executable.
 
 ---
+
+## 📜 Version History
+Detailed version history and changes are documented in [CHANGELOG.md](./CHANGELOG.md).
+
+---
 *License: Internal Tool - Realtek Semiconductor Corp.*
