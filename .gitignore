@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.*.py
 
 # Distribution / Packaging
 bin/
@@ -42,5 +43,6 @@ Thumbs.db
 # === Shared Utility Ignores ===
 settings.json
 *.log
+*.7z
 sync_debug.txt
 app.manifest

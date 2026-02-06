@@ -1,19 +1,11 @@
 # === ETL Weaver Specific ===
-# (Common Python/IDE ignores are handled by root .gitignore)
+# (Common Python/IDE/Temp-scripts are handled by root .gitignore)
 
-# Junk & Logs
+# Tool Specific Junk & Logs
 CONERR$
 *.txt
 *.txt.sum
 
-# Data & Tools
+# Tool Specific Data
 symbol/
 test/
-
-# Temporary Scripts
-*.7z
-.tmp.py
-.tmp2.py
-.get_env.py
-.get_name.py
-.get_tkdnd_path.py
