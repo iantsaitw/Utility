@@ -119,25 +119,28 @@ class TextSplitterApp(TkinterDnD.Tk):
                 self.pdb_listbox.configure(bg="#f5f5f5", fg="#000000")
 
     def refresh_ui(self):
-        # Save current log if possible or just clear
         log_content = self.log_text.get("1.0", tk.END) if self.log_text else ""
-        
         for widget in self.winfo_children():
             if isinstance(widget, tk.Toplevel): continue
             widget.destroy()
-            
         self.create_widgets()
         self.update_styles()
         self._reset_pdb_path()
-        
-        if log_content.strip():
+        if log_content.strip() and self.log_text:
             self.log_text.config(state="normal")
             self.log_text.insert(tk.END, log_content)
             self.log_text.config(state="disabled")
 
     def create_widgets(self):
+        # 1. Status Bar (Fixed at Bottom)
+        status_bar = ttk.Frame(self, padding=(12, 3), style="Secondary.TFrame")
+        status_bar.pack(side="bottom", fill="x")
+        ttk.Label(status_bar, textvariable=self.status, font=(self.settings["ui_font_family"], 8, "italic"), style="Secondary.TLabel").pack(side="left")
+        ttk.Label(status_bar, text=f"v{APP_VERSION}", font=(self.settings["ui_font_family"], 8), style="Secondary.TLabel").pack(side="right")
+
+        # 2. Main Scrollable Container (Fills middle)
         main_container = ttk.Frame(self, padding=(20, 10, 20, 10))
-        main_container.pack(fill="both", expand=True)
+        main_container.pack(side="top", fill="both", expand=True)
         main_container.columnconfigure(0, weight=1)
 
         # Header
@@ -145,8 +148,7 @@ class TextSplitterApp(TkinterDnD.Tk):
         header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         ttk.Label(header_frame, text=APP_TITLE, font=(self.settings["ui_font_family"], 16, "bold")).pack(side="left")
         
-        settings_btn = ttk.Button(header_frame, text="⚙ Settings", width=12, command=self.open_settings_dialog)
-        settings_btn.pack(side="right", padx=(10, 0))
+        ttk.Button(header_frame, text="⚙ Settings", width=12, command=self.open_settings_dialog).pack(side="right", padx=(10, 0))
         
         if self.show_sys_info:
             sys_info_mini = ttk.Frame(header_frame)
@@ -182,12 +184,6 @@ class TextSplitterApp(TkinterDnD.Tk):
         # Log
         self.create_log_panel(main_container).grid(row=2, column=0, sticky="nsew", pady=(15, 0))
         main_container.rowconfigure(2, weight=1)
-
-        # Status Bar
-        status_bar = ttk.Frame(self, padding=(12, 3), style="Secondary.TFrame")
-        status_bar.pack(side="bottom", fill="x")
-        ttk.Label(status_bar, textvariable=self.status, font=(self.settings["ui_font_family"], 8, "italic"), style="Secondary.TLabel").pack(side="left")
-        ttk.Label(status_bar, text=f"v{APP_VERSION}", font=(self.settings["ui_font_family"], 8), style="Secondary.TLabel").pack(side="right")
 
     def create_drop_zone(self, parent):
         drop_card = ttk.Frame(parent, padding=1, style="Card.TFrame")
@@ -252,16 +248,12 @@ class TextSplitterApp(TkinterDnD.Tk):
     def create_action_buttons(self, parent):
         af = ttk.Frame(parent)
         af.columnconfigure((0, 1, 2), weight=1)
-        
         self.convert_button = ttk.Button(af, text="Convert ETL", style="Accent.TButton", command=self.start_conversion_thread, state="disabled")
         self.convert_button.grid(row=0, column=0, sticky="ew", ipady=8, padx=(0, 5))
-        
         self.split_button = ttk.Button(af, text="Split TXT", command=self.start_split_thread, state="disabled")
         self.split_button.grid(row=0, column=1, sticky="ew", ipady=8, padx=(5, 5))
-        
         self.open_folder_button = ttk.Button(af, text="Open Folder", command=self._open_txt_folder, state="disabled")
         self.open_folder_button.grid(row=0, column=2, sticky="ew", ipady=8, padx=(5, 0))
-        
         return af
 
     def _update_button_states(self):
@@ -293,40 +285,26 @@ class TextSplitterApp(TkinterDnD.Tk):
         x = self.winfo_x() + (self.winfo_width() // 2) - 225
         y = self.winfo_y() + (self.winfo_height() // 2) - 225
         sw.geometry(f"+{x}+{y}")
-        
         container = ttk.Frame(sw, padding=20)
         container.pack(fill="both", expand=True)
         p = {"padx": 10, "pady": 8}
-
-        # Theme
         ttk.Label(container, text="Theme:").grid(row=0, column=0, sticky="w", **p)
         tv = tk.StringVar(value=self.settings["theme"])
-        tcb = ttk.Combobox(container, textvariable=tv, values=["dark", "light"], state="readonly")
-        tcb.grid(row=0, column=1, sticky="ew", **p)
-
-        # Font
+        ttk.Combobox(container, textvariable=tv, values=["dark", "light"], state="readonly").grid(row=0, column=1, sticky="ew", **p)
         fonts = sorted(tkfont.families())
         ttk.Label(container, text="UI Font:").grid(row=1, column=0, sticky="w", **p)
         fv = tk.StringVar(value=self.settings["ui_font_family"])
-        fcb = ttk.Combobox(container, textvariable=fv, values=fonts, state="readonly")
-        fcb.grid(row=1, column=1, sticky="ew", **p)
-
+        ttk.Combobox(container, textvariable=fv, values=fonts, state="readonly").grid(row=1, column=1, sticky="ew", **p)
         ttk.Label(container, text="UI Font Size:").grid(row=2, column=0, sticky="w", **p)
         sv = tk.IntVar(value=self.settings["ui_font_size"])
-        ss = ttk.Spinbox(container, from_=8, to=24, textvariable=sv)
-        ss.grid(row=2, column=1, sticky="ew", **p)
-
-        # PDB
+        ttk.Spinbox(container, from_=8, to=24, textvariable=sv).grid(row=2, column=1, sticky="ew", **p)
         ttk.Label(container, text="Default PDB Path:").grid(row=3, column=0, sticky="w", **p)
         pv = tk.StringVar(value=self.settings["default_pdb_path"])
-        pe = ttk.Entry(container, textvariable=pv)
-        pe.grid(row=3, column=1, sticky="ew", **p)
-        
+        ttk.Entry(container, textvariable=pv).grid(row=3, column=1, sticky="ew", **p)
         def b_pdb():
             path = filedialog.askdirectory()
             if path: pv.set(path)
         ttk.Button(container, text="Browse", command=b_pdb).grid(row=4, column=1, sticky="e", padx=10)
-
         def save():
             self.settings.update({"theme": tv.get(), "ui_font_family": fv.get(), "ui_font_size": sv.get(), "default_pdb_path": pv.get()})
             save_settings(self.settings)
@@ -334,7 +312,6 @@ class TextSplitterApp(TkinterDnD.Tk):
             sw.destroy()
             self.refresh_ui()
             self.status.set("Settings applied.")
-
         br = ttk.Frame(container)
         br.grid(row=5, column=0, columnspan=2, pady=(20, 0))
         ttk.Button(br, text="Save", command=save).pack(side="left", padx=5)
@@ -441,14 +418,6 @@ class TextSplitterApp(TkinterDnD.Tk):
         self.update_estimated_files()
         self._update_button_states()
         
-    def _update_button_states(self):
-        tr = self.etl_path.get() and self.pdb_path.get()
-        self.tracefmt_button.config(state="normal" if tr else "disabled")
-        self.traceview_button.config(state="normal" if tr else "disabled")
-        sr = self.txt_path.get() and os.path.exists(self.txt_path.get())
-        self.split_button.config(state="normal" if sr else "disabled")
-        self.open_folder_button.config(state="normal" if sr else "disabled")
-
     def update_estimated_files(self, event=None):
         tp = self.txt_path.get()
         if not tp or not os.path.exists(tp):

@@ -61,3 +61,6 @@ symbol/
 .get_env.py
 .get_name.py
 .get_tkdnd_path.py
+
+# Test data
+test/
