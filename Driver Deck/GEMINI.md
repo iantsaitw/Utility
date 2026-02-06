@@ -23,9 +23,8 @@ Driver Deck is a GUI tool specifically designed for managing and building Window
 - **Absolute Path Fix**: Corrected the storage path of `settings.json` to the EXE directory, ensuring that settings like PFX are correctly preserved regardless of how the app is launched.
 
 ### 4. Build System
-- **File Lock Avoidance**: `build.bat` uses a "temporary filename build" strategy.
-    - During build, it first produces `DriverDeck_Pro.exe` to avoid resource locks on old files by Windows.
-    - After a successful build, it automatically renames it back to `Driver Deck.exe`, ensuring successful resource embedding.
+- **Direct Build**: `build.bat` now builds the executable directly as `Driver Deck.exe`.
+- **Version Tracking**: Automatically generates a `version.txt` with timestamp in the `dist` folder during build for automated publishing.
 
 ## Key File Descriptions
 - `main.py`: Application entry point, handles layout, DPI awareness, and core component initialization.
