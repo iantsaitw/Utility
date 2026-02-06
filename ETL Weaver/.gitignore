@@ -55,6 +55,8 @@ venv.bak/
 
 # Project specific
 CONERR$
+*.txt
+*.txt.sum
 symbol/
 *.7z
 .tmp.py
