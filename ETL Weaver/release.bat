@@ -3,6 +3,7 @@ setlocal enabledelayedexpansion
 title ETL Weaver - Master Release
 
 echo [1/6] Detecting changes since last release...
+if not exist "VERSION" echo 1.0.0> VERSION
 set /p OLD_VER=<VERSION
 set TAG_PREFIX=ETL_Weaver-v
 set LAST_TAG=%TAG_PREFIX%%OLD_VER%
@@ -23,26 +24,50 @@ if %ERRORLEVEL% neq 0 (
 
 echo %NEW_VER%> VERSION
 
-echo [4/6] Updating CHANGELOG.md...
+echo [3/6] Updating CHANGELOG.md...
 set TEMP_CHG=changelog.tmp
 echo ## [%NEW_VER%] - %date% > %TEMP_CHG%
 type %LOG_FILE% >> %TEMP_CHG%
 echo. >> %TEMP_CHG%
-type CHANGELOG.md >> %TEMP_CHG%
-powershell -Command "(Get-Content %TEMP_CHG%) | Select-Object -Skip 3 | Set-Content CHANGELOG.md"
-del %LOG_FILE% %TEMP_CHG%
+if exist CHANGELOG.md (
+    type CHANGELOG.md >> %TEMP_CHG%
+    powershell -Command "(Get-Content %TEMP_CHG%) | Select-Object -Skip 3 | Set-Content CHANGELOG.md"
+) else (
+    move /y %TEMP_CHG% CHANGELOG.md >nul
+)
 
-echo [5/6] Committing version bump...
+echo [4/6] Committing version bump to Git...
 git add VERSION CHANGELOG.md
 git commit -m "chore: bump version to v%NEW_VER%"
 git push
 
-echo [6/6] Build and Publish...
+echo [5/6] Executing Build...
 call build.bat
-call publish.bat
+
+echo [6/6] Publishing to GitHub Release...
+set APP_NAME=ETL_Weaver
+if exist "dist\version.txt" (
+    set /p FULL_VER=<"dist\version.txt"
+) else (
+    set FULL_VER=v%NEW_VER%
+)
+
+powershell -Command "$v = '%NEW_VER%'; $c = Get-Content CHANGELOG.md -Raw; if ($c -match \"## \[$v\](.*?)(?=\n## |$)\") { $matches[1].Trim() | Out-File -Encoding utf8 notes.tmp } else { 'New release' | Out-File -Encoding utf8 notes.tmp }"
+
+gh release create %APP_NAME%-%FULL_VER% "dist\ETL Weaver.exe" --title "%APP_NAME% %FULL_VER%" --notes-file notes.tmp
+
+if %ERRORLEVEL% equ 0 (
+    echo SUCCESS: %APP_NAME% %FULL_VER% is LIVE!
+) else (
+    echo FAILED: Could not publish to GitHub.
+)
+
+if exist notes.tmp del notes.tmp
+if exist %LOG_FILE% del %LOG_FILE%
+if exist %TEMP_CHG% del %TEMP_CHG%
 
 echo.
 echo ==========================================
-echo  RELEASE %NEW_VER% COMPLETE
+echo  RELEASE %FULL_VER% COMPLETE
 echo ==========================================
 pause
