@@ -40,9 +40,12 @@ if errorlevel 0 (
     if exist "build" rd /s /q "build"
     if exist "%A_NAME%.spec" del "%A_NAME%.spec"
     
-    :: Generate version info for publish script (e.g., v25.0905-20260206_1100)
+    :: Read base version from VERSION file
+    set /p BASE_VER=<VERSION
+
+    :: Generate version info for publish script (e.g., v1.0.0-20260206_1100)
     for /f "tokens=*" %%a in ('powershell -Command "Get-Date -Format 'yyyyMMdd_HHmm'"') do set TS=%%a
-    echo v25.0905-!TS!> "dist\version.txt"
+    echo v!BASE_VER!-!TS!> "dist\version.txt"
 
     echo.
 ) else (

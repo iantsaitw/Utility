@@ -15,9 +15,12 @@ python -m PyInstaller --onefile --noconsole --clean --name "Driver Deck" --icon=
 if %errorlevel% equ 0 (
     echo Finalizing...
     
-    :: Generate version info for publish script (e.g., v5.3.2-20260206_1100)
+    :: Read base version from VERSION file
+    set /p BASE_VER=<VERSION
+
+    :: Generate version info for publish script (e.g., v1.0.0-20260206_1100)
     for /f "tokens=*" %%a in ('powershell -Command "Get-Date -Format 'yyyyMMdd_HHmm'"') do set TS=%%a
-    echo v5.3.2-!TS!> "dist\version.txt"
+    echo v!BASE_VER!-!TS!> "dist\version.txt"
 
     if exist "build" rmdir /s /q "build"
     if exist "Driver Deck.spec" del "Driver Deck.spec"

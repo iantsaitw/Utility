@@ -3,7 +3,7 @@
 ## Project Overview
 Driver Deck is a GUI tool specifically designed for managing and building Windows drivers, built with Python, Tkinter, and sv-ttk.
 
-## Current Version Features (v5.3.2 - UI Optimized)
+## Current Version Features (v1.0.0 - UI Optimized)
 
 ### 1. UI Layout
 - **Layout Swap**: Moved "Project Management Tab" to the left and "Terminal" to the right to optimize visual focus.

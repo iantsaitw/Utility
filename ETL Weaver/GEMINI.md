@@ -1,6 +1,6 @@
 # ETL Weaver - Project Status Record
 
-## Current Version: 25.0905 (Settings & Stability Update)
+## Current Version: 1.0.0 (Settings & Stability Update)
 **Last Updated:** 2026-02-06
 
 ---
