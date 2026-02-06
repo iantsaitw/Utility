@@ -1,7 +1,6 @@
 # 🛠️ Windows Utility Suite
 
 [![License](https://img.shields.io/badge/License-Internal-blue.svg)](https://github.com/iantsaitw/Utility)
-[![Latest Release](https://img.shields.io/github/v/release/iantsaitw/Utility?include_prereleases&color=green)](https://github.com/iantsaitw/Utility/releases)
 [![Last Commit](https://img.shields.io/github/last-commit/iantsaitw/Utility)](https://github.com/iantsaitw/Utility/commits/master)
 
 A curated collection of high-performance internal tools engineered for Windows driver development, system debugging, and ETL log analysis. This suite bridges legacy command-line utilities with modern, efficient GUI workflows.
