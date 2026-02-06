@@ -12,8 +12,8 @@ A curated collection of high-performance internal tools engineered for Windows d
 
 | Tool Name | Purpose | Latest Version | Direct Download | History |
 | :--- | :--- | :--- | :--- | :--- |
-| [**Driver Deck**](./Driver%20Deck) | Professional Driver Management & Build System | ![Version](https://img.shields.io/badge/version-1.0.0-green) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./Driver%20Deck/CHANGELOG.md) |
-| [**ETL Weaver**](./ETL%20Weaver) | Modern ETL Analysis & Conversion Engine | ![Version](https://img.shields.io/badge/version-1.0.0-green) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./ETL%20Weaver/CHANGELOG.md) |
+| [**Driver Deck**](./Driver%20Deck) | Professional Driver Management & Build System | [![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases) | [📦 Download](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./Driver%20Deck/CHANGELOG.md) |
+| [**ETL Weaver**](./ETL%20Weaver) | Modern ETL Analysis & Conversion Engine | [![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases) | [📦 Download](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./ETL%20Weaver/CHANGELOG.md) |
 
 ---
 
