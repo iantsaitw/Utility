@@ -1,0 +1,19 @@
+﻿# Python
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+
+# Distribution / Build
+**/build/
+**/dist/
+**/*.spec
+
+# IDEs
+.vscode/
+.idea/
+
+# Project Specific
+**/settings.json
+**/*.log
+**/sync_debug.txt
+**/app.manifest
