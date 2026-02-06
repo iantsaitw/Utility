@@ -1,15 +1,2 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Distribution / Build
-build/
-dist/
-*.spec
-
-# Debug/Sync Logs
-*.log
-sync_debug.txt
-settings.json
-app.manifest
+# === Driver Deck Specific ===
+# (Common Python/IDE ignores are handled by root .gitignore)

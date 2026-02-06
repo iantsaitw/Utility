@@ -1,19 +1,46 @@
-﻿# Python
-**/__pycache__/
-**/*.py[cod]
-**/*$py.class
+# === Global Python Ignores ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# Distribution / Build
-**/build/
-**/dist/
-**/*.spec
+# Distribution / Packaging
+bin/
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+*.spec
 
-# IDEs
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / Coverage reports
+htmlcov/
+.tox/
+.nox/
+.cache
+.pytest_cache/
+coverage.xml
+*.cover
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# === IDE & OS ===
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-# Project Specific
-**/settings.json
-**/*.log
-**/sync_debug.txt
-**/app.manifest
+# === Shared Utility Ignores ===
+settings.json
+*.log
+sync_debug.txt
+app.manifest
