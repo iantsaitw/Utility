@@ -26,7 +26,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo [3/6] Extracting logs and updating files...
 set LOG_FILE=release_logs.tmp
-git log %LAST_TAG%..HEAD --oneline --pretty=format:"- %%s" > %LOG_FILE%
+git log %LAST_TAG%..HEAD --oneline --pretty=format:"- %%s" -- . > %LOG_FILE%
 if %ERRORLEVEL% neq 0 (
     echo - Minor updates and improvements > %LOG_FILE%
 )
