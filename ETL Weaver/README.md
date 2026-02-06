@@ -48,7 +48,9 @@
    ```powershell
    pip install sv-ttk tkinterdnd2 psutil
    ```
-3. **Run**:
+3. **Build Binary**:
+   Run `scripts/build.bat` for a production-ready executable.
+4. **Run**:
    ```powershell
    python main.py
    ```

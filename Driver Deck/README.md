@@ -51,6 +51,8 @@ Unlike standard text-based terminals, Driver Deck implements low-level **Win32 w
    ```powershell
    python main.py
    ```
+3. **Build Binary**:
+   Run `scripts/build.bat` for a production-ready executable.
 
 ---
 

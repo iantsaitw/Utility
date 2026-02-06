@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0.."
 title ETL Weaver - Light Build
 
 echo [1/4] Killing existing processes...

@@ -1,11 +1,12 @@
 @echo off
 setlocal enabledelayedexpansion
-title Driver Deck - Master Release (Safety First)
+cd /d "%~dp0.."
+title ETL Weaver - Master Release (Safety First)
 
 echo [1/6] Calculating next version...
 if not exist "VERSION" echo 1.0.0> VERSION
 set /p OLD_VER=<VERSION
-set TAG_PREFIX=Driver_Deck-v
+set TAG_PREFIX=ETL_Weaver-v
 
 for /f "tokens=1,2,3 delims=." %%a in ("%OLD_VER%") do (
     set /a PATCH=%%c+1
@@ -19,7 +20,6 @@ call build.bat
 if %ERRORLEVEL% neq 0 (
     echo.
     echo [!] ERROR: Build failed. Release aborted.
-    echo Please fix the code before releasing.
     pause
     exit /b 1
 )
@@ -31,7 +31,6 @@ if %ERRORLEVEL% neq 0 (
     echo - Minor updates and improvements > %LOG_FILE%
 )
 
-:: Update VERSION & CHANGELOG
 echo %NEW_VER%> VERSION
 set TEMP_CHG=changelog.tmp
 echo ## [%NEW_VER%] - %date% > %TEMP_CHG%
@@ -53,10 +52,10 @@ echo [5/6] Publishing to GitHub Release...
 set TAG_NAME=%TAG_PREFIX%%NEW_VER%
 powershell -Command "$v = '%NEW_VER%'; $c = Get-Content CHANGELOG.md -Raw; if ($c -match \"## \[$v\](.*?)(?=\n## |$)\") { $matches[1].Trim() | Out-File -Encoding utf8 notes.tmp } else { 'New release' | Out-File -Encoding utf8 notes.tmp }"
 
-gh release create %TAG_NAME% "dist\Driver Deck.exe" --title "Driver Deck v%NEW_VER%" --notes-file notes.tmp
+gh release create %TAG_NAME% "dist\ETL Weaver.exe" --title "ETL Weaver v%NEW_VER%" --notes-file notes.tmp
 
 if %ERRORLEVEL% equ 0 (
-    echo SUCCESS: Driver Deck v%NEW_VER% is LIVE!
+    echo SUCCESS: ETL Weaver v%NEW_VER% is LIVE!
 ) else (
     echo FAILED: Could not publish.
 )

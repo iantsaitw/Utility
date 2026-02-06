@@ -37,7 +37,7 @@ A curated collection of high-performance internal tools engineered for Windows d
 
 To release a new version of any tool:
 1. Complete your changes and commit them.
-2. Navigate to the tool's directory (e.g., `cd "Driver Deck"`).
+2. Navigate to the tool's scripts directory (e.g., `cd "Driver Deck/scripts"`).
 3. Run `release.bat`.
 
 The system will automatically bump the version, update the changelog, sync with Git, and publish to GitHub Releases.

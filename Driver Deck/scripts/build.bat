@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0.."
 echo [1/3] Killing old processes...
 taskkill /F /IM "Driver Deck.exe" /T >nul 2>&1
 timeout /t 2 /nobreak >nul
