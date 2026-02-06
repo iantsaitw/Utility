@@ -12,10 +12,12 @@
 
 ### 🛡️ Rock-Solid Reliability
 - **Legacy Stability**: Bundles a verified version of `traceview.exe` to bypass truncation and encoding bugs found in newer WDK versions.
+- **Drag & Drop Integration**: Intuitive file loading via `tkinterdnd2` for ETL and PDB files.
 - **Hybrid Engine**: Supports both stable legacy conversion and high-speed modern `tracefmt.exe` (WDK 2025) workflows.
 
 ### 🎨 Modern Analytical UI
 - **Live Theming**: Instant switching between Dark and Light modes using the `sv-ttk` engine.
+- **High-Performance Backend**: Conversion tasks are executed with **High Process Priority** to ensure speed for large logs.
 - **Personalized Workspace**: Persistent configuration for typography and default PDB symbol paths.
 - **Thread-Safe Logging**: Real-time conversion feedback without UI freezing.
 

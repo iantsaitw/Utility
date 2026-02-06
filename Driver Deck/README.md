@@ -13,11 +13,11 @@
 ### 🖥️ Integrated Win32 Terminal
 Unlike standard text-based terminals, Driver Deck implements low-level **Win32 window embedding**. It hosts an actual VS 2022 Developer Console directly within the Tkinter frame, providing:
 - **Zero Latency**: Native shell performance.
+- **DPI Awareness**: High-definition UI scaling for 4K monitors.
 - **Robust Focus**: Advanced `AttachThreadInput` logic for seamless keyboard handling.
-- **Tab-Completion**: Full shell-level path completion support.
 
 ### 🏗️ Build & Signing Orchestration
-- **Project Auto-Discovery**: Smart scanning of PCIE and USB driver directories.
+- **Categorized Management**: Intelligent scanning and grouping of **PCIE** and **USB** driver projects.
 - **WDK Integration**: Automated environment detection for Visual Studio 2022.
 - **Security-First Signing**: Integrated `signtool.exe` workflow with PFX certificate management.
 
