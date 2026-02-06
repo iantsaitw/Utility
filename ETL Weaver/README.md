@@ -1,5 +1,9 @@
 # 🧶 ETL Weaver
 
+[![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases)
+[![License](https://img.shields.io/badge/License-Internal-blue.svg)](https://github.com/iantsaitw/Utility)
+[![Download](https://img.shields.io/badge/Download-EXE-orange.svg)](https://github.com/iantsaitw/Utility/releases)
+
 **ETL Weaver** is a specialized diagnostic utility designed to transform raw Windows Event Trace Logs (ETL) into human-readable analysis. It focuses on data integrity, high-speed conversion, and a modern user experience.
 
 ---
@@ -32,10 +36,15 @@
 
 ## 🛠️ Setup
 
+### For Users (Binary)
+1. Download the latest `ETL Weaver.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
+2. Ensure you have the necessary PDB files for symbol resolution.
+
+### For Developers (Source)
 1. **Environment**: Ensure Python 3.10+ is installed.
 2. **Library**:
    ```powershell
-   pip install sv-ttk
+   pip install sv-ttk tkinterdnd2 psutil
    ```
 3. **Run**:
    ```powershell

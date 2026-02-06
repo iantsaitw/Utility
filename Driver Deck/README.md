@@ -1,5 +1,9 @@
 # 🛳️ Driver Deck
 
+[![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases)
+[![License](https://img.shields.io/badge/License-Internal-blue.svg)](https://github.com/iantsaitw/Utility)
+[![Download](https://img.shields.io/badge/Download-EXE-orange.svg)](https://github.com/iantsaitw/Utility/releases)
+
 **Driver Deck** is a high-performance GUI utility engineered for Windows PCIE/USB driver management. It centralizes project scanning, build orchestration, and digital signing into a single, cohesive interface.
 
 ---
@@ -28,12 +32,17 @@ Unlike standard text-based terminals, Driver Deck implements low-level **Win32 w
 - **Core**: Python 3.10+
 - **UI Framework**: Tkinter + `sv-ttk` (Windows 11 Immersive Design)
 - **APIs**: Win32 API (via `ctypes`) for window management and focus control.
-- **Packaging**: Customized PyInstaller workflow with resource lock avoidance.
+- **Packaging**: Customized PyInstaller workflow.
 
 ---
 
 ## 🚀 Quick Start
 
+### For Users (Binary)
+1. Download the latest `Driver Deck.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
+2. Run as Administrator for terminal features.
+
+### For Developers (Source)
 1. **Install Dependencies**:
    ```powershell
    pip install sv-ttk
@@ -42,8 +51,6 @@ Unlike standard text-based terminals, Driver Deck implements low-level **Win32 w
    ```powershell
    python main.py
    ```
-3. **Build Binary**:
-   Run `build.bat` for a production-ready executable.
 
 ---
 
@@ -51,4 +58,4 @@ Unlike standard text-based terminals, Driver Deck implements low-level **Win32 w
 Detailed version history and changes are documented in [CHANGELOG.md](./CHANGELOG.md).
 
 ---
-*License: Internal Tool - Realtek Semiconductor Corp.*
+*Internal Engineering Toolset - Realtek Semiconductor Corp.*
