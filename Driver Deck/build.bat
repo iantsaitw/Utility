@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 echo [1/3] Killing old processes...
 taskkill /F /IM "Driver Deck.exe" /T >nul 2>&1
 taskkill /F /IM "DriverDeck_Pro.exe" /T >nul 2>&1
