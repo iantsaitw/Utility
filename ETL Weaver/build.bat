@@ -45,8 +45,6 @@ if errorlevel 0 (
     echo v25.0905-!TS!> "dist\version.txt"
 
     echo.
-    echo Launching application...
-    start "" "dist\%A_NAME%.exe"
 ) else (
     echo.
     echo ERROR: Build failed.
