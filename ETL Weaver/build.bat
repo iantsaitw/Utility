@@ -20,8 +20,7 @@ if exist "build" rd /s /q "build"
 if exist "dist" rd /s /q "dist"
 if exist "%A_NAME%.spec" del "%A_NAME%.spec"
 
-echo [4/4] Building Single EXE (Tiny & Fast)...
-REM Removed symbol folder entirely from the build process
+echo [4/4] Building Single EXE...
 python -m PyInstaller --noconfirm --onefile --windowed --noupx --name "%A_NAME%" ^
     --icon="icon.ico" ^
     --add-data "icon.ico;." ^
@@ -31,25 +30,10 @@ python -m PyInstaller --noconfirm --onefile --windowed --noupx --name "%A_NAME%"
     -p . main.py
 
 if errorlevel 0 (
-    echo.
-    echo ==========================================================
-    echo  SUCCESS: Build Complete!
-    echo  Output: dist\%A_NAME%.exe
-    echo ==========================================================
-    
     if exist "build" rd /s /q "build"
     if exist "%A_NAME%.spec" del "%A_NAME%.spec"
-    
-    :: Read base version from VERSION file
-    set /p BASE_VER=<VERSION
-
-    :: Generate version info for publish script (e.g., v1.0.0-20260206_1100)
-    for /f "tokens=*" %%a in ('powershell -Command "Get-Date -Format 'yyyyMMdd_HHmm'"') do set TS=%%a
-    echo v!BASE_VER!-!TS!> "dist\version.txt"
-
-    echo.
+    echo Build Complete.
 ) else (
-    echo.
     echo ERROR: Build failed.
     pause
 )

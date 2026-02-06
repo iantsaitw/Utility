@@ -6,19 +6,19 @@ echo [1/6] Detecting changes since last release...
 if not exist "VERSION" echo 1.0.0> VERSION
 set /p OLD_VER=<VERSION
 set TAG_PREFIX=ETL_Weaver-v
-set LAST_TAG=%TAG_PREFIX%%OLD_VER%
 
 for /f "tokens=1,2,3 delims=." %%a in ("%OLD_VER%") do (
     set /a PATCH=%%c+1
     set NEW_VER=%%a.%%b.!PATCH!
 )
+set LAST_TAG=%TAG_PREFIX%%OLD_VER%
 echo Current: %OLD_VER% -^> Next: %NEW_VER%
 
 echo [2/6] Extracting Git logs...
 set LOG_FILE=release_logs.tmp
 git log %LAST_TAG%..HEAD --oneline --pretty=format:"- %%s" > %LOG_FILE%
 if %ERRORLEVEL% neq 0 (
-    echo No previous tag found. using default log.
+    echo No previous tag found. Using default log.
     echo - Minor updates and improvements > %LOG_FILE%
 )
 
@@ -46,20 +46,16 @@ call build.bat
 
 echo [6/6] Publishing to GitHub Release...
 set APP_NAME=ETL_Weaver
-if exist "dist\version.txt" (
-    set /p FULL_VER=<"dist\version.txt"
-) else (
-    set FULL_VER=v%NEW_VER%
-)
+set TAG_NAME=%TAG_PREFIX%%NEW_VER%
 
 powershell -Command "$v = '%NEW_VER%'; $c = Get-Content CHANGELOG.md -Raw; if ($c -match \"## \[$v\](.*?)(?=\n## |$)\") { $matches[1].Trim() | Out-File -Encoding utf8 notes.tmp } else { 'New release' | Out-File -Encoding utf8 notes.tmp }"
 
-gh release create %APP_NAME%-%FULL_VER% "dist\ETL Weaver.exe" --title "%APP_NAME% %FULL_VER%" --notes-file notes.tmp
+gh release create %TAG_NAME% "dist\ETL Weaver.exe" --title "%APP_NAME% v%NEW_VER%" --notes-file notes.tmp
 
 if %ERRORLEVEL% equ 0 (
-    echo SUCCESS: %APP_NAME% %FULL_VER% is LIVE!
+    echo SUCCESS: %APP_NAME% v%NEW_VER% is LIVE!
 ) else (
-    echo FAILED: Could not publish to GitHub.
+    echo FAILED: Could not publish.
 )
 
 if exist notes.tmp del notes.tmp
@@ -68,6 +64,6 @@ if exist %TEMP_CHG% del %TEMP_CHG%
 
 echo.
 echo ==========================================
-echo  RELEASE %FULL_VER% COMPLETE
+echo  RELEASE v%NEW_VER% COMPLETE
 echo ==========================================
 pause
