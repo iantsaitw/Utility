@@ -1,49 +1,49 @@
-# Driver Deck
+# 🛳️ Driver Deck
 
-Driver Deck is a modern GUI utility designed for managing and building Windows PCIE/USB drivers. It provides a unified interface to scan driver projects, integrate with the VS 2022 build environment, and handle digital signatures.
+**Driver Deck** is a high-performance GUI utility engineered for Windows PCIE/USB driver management. It centralizes project scanning, build orchestration, and digital signing into a single, cohesive interface.
 
-## Features
+---
 
-- **Modern UI**: Built with Python and Tkinter, featuring the `sv-ttk` theme for a Windows 11 look and feel (supporting Dark/Light modes).
-- **Integrated Terminal**: Built-in VS 2022 Developer Console with Win32-level embedding and robust focus management.
-- **Project Management**: Automatic scanning of driver projects with categorized views (PCIE/USB).
-- **Digital Signing**: Seamless integration with `signtool.exe` using PFX certificates.
-- **Workflow Tools**: One-click backup with timestamps and easy export of folders or `.sys` files.
-- **Persistent Settings**: Local storage of configurations like PFX paths and root directories.
+## ✨ Key Capabilities
 
-## Prerequisites
+### 🖥️ Integrated Win32 Terminal
+Unlike standard text-based terminals, Driver Deck implements low-level **Win32 window embedding**. It hosts an actual VS 2022 Developer Console directly within the Tkinter frame, providing:
+- **Zero Latency**: Native shell performance.
+- **Robust Focus**: Advanced `AttachThreadInput` logic for seamless keyboard handling.
+- **Tab-Completion**: Full shell-level path completion support.
 
-- **OS**: Windows 10/11
-- **Python**: 3.10 or higher
-- **Build Tools**: Visual Studio 2022 (Professional/Community/Enterprise) with C++ build components.
-- **Dependencies**: 
-  ```bash
-  pip install sv-ttk
-  ```
+### 🏗️ Build & Signing Orchestration
+- **Project Auto-Discovery**: Smart scanning of PCIE and USB driver directories.
+- **WDK Integration**: Automated environment detection for Visual Studio 2022.
+- **Security-First Signing**: Integrated `signtool.exe` workflow with PFX certificate management.
 
-## Usage
+### 📦 Workflow Automation
+- **Atomic Backups**: One-click timestamped source archival.
+- **Direct Export**: Simplified extraction of `.sys` binaries and package folders.
 
-### Running from Source
-To start the application in a development environment:
-```bash
-python main.py
-```
+---
 
-### Building the Executable
-A provided `build.bat` script handles the PyInstaller packaging process. It uses a temporary-rename strategy to bypass Windows file locks and ensures resources (manifests/icons) are correctly embedded.
-```bash
-./build.bat
-```
-The output will be located in the `dist/` directory.
+## 🛠️ Technical Stack
 
-## Project Structure
+- **Core**: Python 3.10+
+- **UI Framework**: Tkinter + `sv-ttk` (Windows 11 Immersive Design)
+- **APIs**: Win32 API (via `ctypes`) for window management and focus control.
+- **Packaging**: Customized PyInstaller workflow with resource lock avoidance.
 
-- `main.py`: Application entry point and layout management.
-- `terminal_widget.py`: Win32 logic for embedding the CMD window and handling keyboard focus.
-- `project_tab.py`: Logic for project tabs, file lists, and driver operations.
-- `driver_utils.py`: Helpers for file versions, signatures, and environment pathing.
-- `config.py`: Global constants, color definitions, and settings persistence.
-- `ui_factory.py`: Standardized widget creation engine.
+---
 
-## License
-Internal Tool - Realtek Semiconductor Corp.
+## 🚀 Quick Start
+
+1. **Install Dependencies**:
+   ```powershell
+   pip install sv-ttk
+   ```
+2. **Launch**:
+   ```powershell
+   python main.py
+   ```
+3. **Build Binary**:
+   Run `build.bat` for a production-ready executable.
+
+---
+*License: Internal Tool - Realtek Semiconductor Corp.*

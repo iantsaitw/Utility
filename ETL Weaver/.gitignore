@@ -54,6 +54,7 @@ env.bak/
 venv.bak/
 
 # Project specific
+CONERR$
 symbol/
 *.7z
 .tmp.py

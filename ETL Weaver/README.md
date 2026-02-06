@@ -1,45 +1,46 @@
-# ETL Weaver
+# 🧶 ETL Weaver
 
-ETL Weaver is a modern GUI utility designed for viewing and converting Windows Event Trace Log (ETL) files. It streamlines the workflow of transforming raw ETL data into human-readable formats using established Windows debugging tools.
+**ETL Weaver** is a specialized diagnostic utility designed to transform raw Windows Event Trace Logs (ETL) into human-readable analysis. It focuses on data integrity, high-speed conversion, and a modern user experience.
 
-## Features
+---
 
-- **Modern UI**: Clean and intuitive interface built with Python and Tkinter, supporting theme customization (Dark/Light).
-- **Stable Conversion**: Utilizes a bundled, stable version of `traceview.exe` to ensure data integrity and prevent common truncation or encoding issues.
-- **Flexible Tooling**: Includes both legacy `traceview.exe` and modern `tracefmt.exe` (WDK 2025) to cater to different performance and compatibility needs.
-- **Persistent Configuration**: Save your UI preferences (font, theme) and default PDB search paths across sessions.
-- **Live UI Refresh**: Update application themes and fonts instantly without restarting the tool or losing your current logs.
-- **Performance Optimized**: Conversion processes are executed with high priority to minimize wait times for large log files.
+## 💎 Features
 
-## Prerequisites
+### 🛡️ Rock-Solid Reliability
+- **Legacy Stability**: Bundles a verified version of `traceview.exe` to bypass truncation and encoding bugs found in newer WDK versions.
+- **Hybrid Engine**: Supports both stable legacy conversion and high-speed modern `tracefmt.exe` (WDK 2025) workflows.
 
-- **OS**: Windows 10/11
-- **Python**: 3.10 or higher
-- **Dependencies**: 
-  ```bash
-  pip install sv-ttk
-  ```
+### 🎨 Modern Analytical UI
+- **Live Theming**: Instant switching between Dark and Light modes using the `sv-ttk` engine.
+- **Personalized Workspace**: Persistent configuration for typography and default PDB symbol paths.
+- **Thread-Safe Logging**: Real-time conversion feedback without UI freezing.
 
-## Usage
+### ⚡ Performance Optimized
+- **Process Elevation**: Automatically executes conversion tasks with high process priority.
+- **Streamlined Workflow**: Minimizes manual steps from raw trace to formatted log.
 
-### Running from Source
-```bash
-python main.py
-```
+---
 
-### Building the Executable
-A `build.bat` script is provided for packaging the application with PyInstaller.
-```bash
-./build.bat
-```
+## 📂 Project Architecture
 
-## Project Structure
+- `ui_main_window.py`: Orchestrates the complex UI state and event loop.
+- `core_logic.py`: Manages the lifecycle of external WDK tool processes.
+- `trace_tools/`: A curated collection of stable and experimental Microsoft trace utilities.
+- `config.py`: JSON-based settings management with live-apply capabilities.
 
-- `main.py`: Entry point for the application.
-- `ui_main_window.py`: Core UI logic including settings and conversion workflows.
-- `core_logic.py`: Standardized ETL conversion logic using bundled tools.
-- `config.py`: Management of configuration settings and JSON persistence.
-- `trace_tools/`: Directory containing `traceview.exe`, `tracefmt.exe`, and documentation.
+---
 
-## License
-Internal Tool - Realtek Semiconductor Corp.
+## 🛠️ Setup
+
+1. **Environment**: Ensure Python 3.10+ is installed.
+2. **Library**:
+   ```powershell
+   pip install sv-ttk
+   ```
+3. **Run**:
+   ```powershell
+   python main.py
+   ```
+
+---
+*License: Internal Tool - Realtek Semiconductor Corp.*
