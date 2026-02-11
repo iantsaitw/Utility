@@ -29,8 +29,8 @@ This repository serves as a centralized suite for Windows internal tools, featur
 ## Current Project Matrix
 | Project | Version | Status | Scripts Path |
 | :--- | :--- | :--- | :--- |
-| Driver Deck | v1.0.0 | Stable / Automated | `scripts/` |
+| Driver Deck | v1.1.0 | Stable / Automated | `scripts/` |
 | ETL Weaver | v1.0.0 | Stable / Automated | `scripts/` |
 
 ---
-*Last Updated: 2026-02-06*
+*Last Updated: 2026-02-11*

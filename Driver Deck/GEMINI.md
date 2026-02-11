@@ -26,6 +26,14 @@ Driver Deck is a GUI tool specifically designed for managing and building Window
 - **Direct Build**: `build.bat` now builds the executable directly as `Driver Deck.exe`.
 - **Version Tracking**: Automatically generates a `version.txt` with timestamp in the `dist` folder during build for automated publishing.
 
+## Standardized Release Process (release.bat)
+The project follows a safety-first automated release workflow:
+1. **Version Detection**: Reads from `VERSION` file and sets `Driver_Deck-v` prefix.
+2. **Pre-release Build**: Automatically triggers `scripts\build.bat` to ensure binary integrity.
+3. **Automated Changelog**: Extracts git logs since last tag and prepends to `CHANGELOG.md`.
+4. **Git Synchronization**: Handles `git commit` (chore: release), `git tag`, and `git push` to origin master.
+5. **GitHub Integration**: Creates a GitHub Release via `gh` CLI and uploads `dist\DriverDeck.exe`.
+
 ## Key File Descriptions
 - `main.py`: Application entry point, handles layout, DPI awareness, and core component initialization.
 - `terminal_widget.py`: Core Win32 window operations, handling embedding, focus management, and Tab key passing.

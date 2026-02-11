@@ -24,5 +24,13 @@
 - `trace_tools/`: Contains `traceview.exe`, `tracefmt.exe`, and `TraceView.chm`.
 - `test/`: Sample ETL and PDB for verification.
 
+## Standardized Release Process (release.bat)
+The project follows a safety-first automated release workflow consistent with Driver Deck:
+1. **Version Detection**: Reads from `VERSION` file and sets `ETL_Weaver-v` prefix.
+2. **Pre-release Build**: Automatically triggers `scripts\build.bat` to ensure binary integrity.
+3. **Automated Changelog**: Extracts git logs since last tag and prepends to `CHANGELOG.md`.
+4. **Git Synchronization**: Handles `git commit` (chore: release), `git tag`, and `git push` to origin master.
+5. **GitHub Integration**: Creates a GitHub Release via `gh` CLI and uploads `dist\ETLWeaver.exe`.
+
 ---
 *Status: Finalized and Stable.*

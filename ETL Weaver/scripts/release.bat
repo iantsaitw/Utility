@@ -34,6 +34,12 @@ if "%LAST_TAG%"=="" (
     if !ERRORLEVEL! neq 0 echo - Minor updates and improvements > %LOG_FILE%
 )
 
+echo.
+echo [!] Opening release notes for editing...
+echo     Please format the logs (e.g., add ### Added, ### Fixed).
+echo     Save and close Notepad to continue.
+start /wait notepad %LOG_FILE%
+
 :: Update CHANGELOG.md
 set TEMP_CHG=changelog.tmp
 echo ## [%NEW_VER%] - %date% > %TEMP_CHG%
