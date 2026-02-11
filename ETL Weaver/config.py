@@ -1,7 +1,7 @@
 import os
 
 # Application Info
-APP_NAME = "ETL Weaver"
+APP_NAME = "ETLWeaver"
 
 # Read version from VERSION file
 try:

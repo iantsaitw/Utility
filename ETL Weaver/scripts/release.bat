@@ -56,7 +56,7 @@ git push origin %TAG_NAME%
 echo [5/6] Publishing to GitHub Release...
 type %LOG_FILE% > notes.tmp
 
-gh release create %TAG_NAME% "dist\ETL Weaver.exe" --title "ETL Weaver v%NEW_VER%" --notes-file notes.tmp
+gh release create %TAG_NAME% "dist\ETLWeaver.exe" --title "ETL Weaver v%NEW_VER%" --notes-file notes.tmp
 
 if %ERRORLEVEL% equ 0 (
     echo SUCCESS: ETL Weaver v%NEW_VER% is LIVE!
