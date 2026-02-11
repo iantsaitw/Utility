@@ -51,17 +51,13 @@ class TerminalFrame(ttk.Frame):
         
         self.configure(takefocus=0)
         
-        self.header = ttk.Frame(self)
-        self.header.pack(fill=tk.X, pady=(0, 2))
-        ttk.Label(self.header, text=" VS 2022 DEVELOPER CONSOLE ", 
-                  font=("Segoe UI", 9, "bold"), foreground=config.COLOR_ACCENT).pack(side=tk.LEFT)
-        
-        self.btn_restart = ttk.Button(self.header, text="🔄 Restart", width=12, command=self.restart_terminal)
-        self.btn_restart.pack(side=tk.RIGHT)
-        
         self.container = tk.Frame(self, bg="black", takefocus=0)
         self.container.pack(fill=tk.BOTH, expand=True)
         self.container.bind("<Configure>", self.on_resize)
+
+        # Place the Restart button at the bottom-right corner as an overlay-like button
+        self.btn_restart = ttk.Button(self, text="🔄 Restart", width=10, command=self.restart_terminal)
+        self.btn_restart.place(relx=1.0, rely=1.0, x=-10, y=-10, anchor="se")
         
         # Focus recovery bindings
         self.container.bind("<Button-1>", self.force_focus)
@@ -110,12 +106,22 @@ class TerminalFrame(ttk.Frame):
         unique_id = f"{int(time.time() * 1000) % 1000000:06d}"
         unique_title = f"DriverDeck_{unique_id}"
         
+        # Prepare the internal command string
         if vs_bat:
-            cmd_cmd = f'start "{unique_title}" cmd.exe /K "title {unique_title} && cd /d \"{self.work_dir}\" && call \"{vs_bat}\""'
+            inner_cmd = f'title {unique_title} && cd /d "{self.work_dir}" && call "{vs_bat}"'
         else:
-            cmd_cmd = f'start "{unique_title}" cmd.exe /K "title {unique_title} && cd /d \"{self.work_dir}\""'
+            inner_cmd = f'title {unique_title} && cd /d "{self.work_dir}"'
             
-        subprocess.Popen(cmd_cmd, shell=True, cwd=self.work_dir)
+        try:
+            # Using a list with shell=False is the most reliable way to handle quotes in Windows
+            # Python will handle the necessary escaping for the underlying CreateProcess call
+            args = ["wt.exe", "-p", "Windows PowerShell", "cmd.exe", "/k", inner_cmd]
+            subprocess.Popen(args, shell=False, cwd=self.work_dir)
+        except:
+            # Fallback to traditional CMD if WT is missing
+            fallback_args = ["cmd.exe", "/c", "start", unique_title, "cmd.exe", "/k", inner_cmd]
+            subprocess.Popen(fallback_args, shell=False, cwd=self.work_dir)
+
         threading.Thread(target=self.wait_and_embed, args=(unique_title,), daemon=True).start()
 
     def wait_and_embed(self, title):
