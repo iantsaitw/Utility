@@ -58,7 +58,7 @@ echo [5/6] Publishing to GitHub Release...
 :: Create simple notes from the current log
 type %LOG_FILE% > notes.tmp
 
-gh release create %TAG_NAME% "dist\Driver Deck.exe" --title "Driver Deck v%NEW_VER%" --notes-file notes.tmp
+gh release create %TAG_NAME% "dist\DriverDeck.exe" --title "Driver Deck v%NEW_VER%" --notes-file notes.tmp
 
 if %ERRORLEVEL% equ 0 (
     echo SUCCESS: Driver Deck v%NEW_VER% is LIVE!
