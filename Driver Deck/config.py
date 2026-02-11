@@ -1,16 +1,154 @@
 import os
+import json
+import sys
 
-# Application Info
+# App Information
 APP_NAME = "Driver Deck"
+APP_VERSION = "v5.3.2"
+APP_ID = f"mycompany.tools.{APP_NAME.replace(' ', '').lower()}.v5_3"
 
-# Read version from VERSION file
-try:
-    with open(os.path.join(os.path.dirname(__file__), "VERSION"), "r") as f:
-        APP_VERSION = f"v{f.read().strip()}"
-except Exception:
-    APP_VERSION = "v1.0.0"
+# Get executable directory (compatible with dev and frozen EXE)
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# UI Colors
-COLOR_BG = "#2b2b2b"
-COLOR_FG = "#ffffff"
-COLOR_ACCENT = "#0078d4"
+SETTINGS_FILE = os.path.join(BASE_DIR, "settings.json")
+TARGET_BATCH_FILE = "setenv-for-windows-msbuild-system.bat"
+
+# Categories and relative paths
+DRIVER_PATHS = {
+    "PCIE": [
+        "RTLWlanE_WindowsDriver_(WithSymbol)",
+        "RTLWlanE_WindowsDriver_"
+    ],
+    "USB": [
+        "RTLWlanU_WindowsDriver_(WithSymbol)",
+        "RTLWlanU_WindowsDriver_"
+    ]
+}
+
+DEFAULT_SETTINGS = {
+    "theme_mode": "Dark",
+    "font_family": "Segoe UI",
+    "accent_color": "#4db6ac",
+    "root_dir": r"E:\Project",
+    "export_dir": "",
+    "pfx_path": "",
+    "signtool_path": "",
+    "last_tab": "",
+    "filter_mode": "All",
+    "split_ratio": 0.6
+}
+
+current_settings = DEFAULT_SETTINGS.copy()
+
+# Global UI Colors
+COLOR_BG_DARK = "#1e1e1e"
+COLOR_BG_LIGHT = "#252526"
+COLOR_FG = "#d4d4d4"
+COLOR_BTN_TEXT = "#ffffff"
+COLOR_BTN_BG = "#3c3c3c"
+COLOR_HEADER_BG = "#333333"
+COLOR_HEADER_FG = "#ffffff"
+COLOR_HEADER_BORDER = "#2d2d2d"
+
+COLOR_SCROLL_BG = "#3e3e42"
+COLOR_SCROLL_BG_HOVER = "#686868"
+COLOR_SCROLL_TROUGH = "#1e1e1e"
+COLOR_SCROLL_ARROW = "#999999"
+
+COLOR_ACCENT = "#4db6ac"
+COLOR_ACCENT_HOVER = "#80cbc4"
+
+# Terminal Colors
+COLOR_TERM_BG = "#1e1e1e"
+COLOR_TERM_FG = "#d4d4d4"
+COLOR_ERROR = "#f44336"
+COLOR_SYSTEM = "#4db6ac"
+COLOR_INPUT = "#ffffff"
+
+FONT_UI = ("Segoe UI", 9)
+FONT_BOLD = ("Segoe UI", 9, "bold")
+FONT_LARGE = ("Segoe UI", 11, "bold")
+FONT_TERM = ("Consolas", 10)
+
+def load_settings():
+    """ Load settings from JSON file and update global color constants """
+    global current_settings
+    global COLOR_BG_DARK, COLOR_BG_LIGHT, COLOR_FG
+    global COLOR_BTN_TEXT, COLOR_BTN_BG
+    global COLOR_HEADER_BG, COLOR_HEADER_FG, COLOR_HEADER_BORDER
+    global COLOR_SCROLL_BG, COLOR_SCROLL_BG_HOVER, COLOR_SCROLL_TROUGH, COLOR_SCROLL_ARROW
+    global COLOR_ACCENT, COLOR_ACCENT_HOVER
+    global COLOR_TERM_BG, COLOR_TERM_FG, COLOR_ERROR, COLOR_SYSTEM, COLOR_INPUT
+    global FONT_UI, FONT_BOLD, FONT_LARGE, FONT_TERM
+
+    if os.path.exists(SETTINGS_FILE):
+        try:
+            with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                current_settings.update(data)
+        except: pass
+
+    # Apply defaults if missing
+    for key, value in DEFAULT_SETTINGS.items():
+        if key not in current_settings:
+            current_settings[key] = value
+
+    if current_settings["theme_mode"] == "Light":
+        COLOR_BG_DARK = "#f0f0f0"
+        COLOR_BG_LIGHT = "#ffffff"
+        COLOR_FG = "#333333"
+        COLOR_BTN_TEXT = "#333333"
+        COLOR_BTN_BG = "#e0e0e0"
+        COLOR_HEADER_BG = "#e1e1e1"
+        COLOR_HEADER_FG = "#000000"
+        COLOR_HEADER_BORDER = "#cccccc"
+        COLOR_SCROLL_BG = "#cdcdcd"
+        COLOR_SCROLL_BG_HOVER = "#a6a6a6"
+        COLOR_SCROLL_TROUGH = "#f0f0f0"
+        COLOR_SCROLL_ARROW = "#666666"
+        COLOR_TERM_BG = "#ffffff"
+        COLOR_TERM_FG = "#333333"
+        COLOR_ERROR = "#d32f2f"
+        COLOR_SYSTEM = "#00796b"
+        COLOR_INPUT = "#000000"
+    else:
+        COLOR_BG_DARK = "#1e1e1e"
+        COLOR_BG_LIGHT = "#252526"
+        COLOR_FG = "#d4d4d4"
+        COLOR_BTN_TEXT = "#ffffff"
+        COLOR_BTN_BG = "#333333"
+        COLOR_HEADER_BG = "#111111"
+        COLOR_HEADER_FG = "#cccccc"
+        COLOR_HEADER_BORDER = "#2d2d2d"
+        COLOR_SCROLL_BG = "#424242"
+        COLOR_SCROLL_BG_HOVER = "#4f4f4f"
+        COLOR_SCROLL_TROUGH = "#252526"
+        COLOR_SCROLL_ARROW = "#d4d4d4"
+        COLOR_TERM_BG = "#1e1e1e"
+        COLOR_TERM_FG = "#d4d4d4"
+        COLOR_ERROR = "#f44336"
+        COLOR_SYSTEM = "#4db6ac"
+        COLOR_INPUT = "#ffffff"
+
+    COLOR_ACCENT = current_settings["accent_color"]
+    COLOR_ACCENT_HOVER = COLOR_ACCENT 
+
+    font_fam = current_settings["font_family"]
+    FONT_UI = (font_fam, 9)
+    FONT_BOLD = (font_fam, 9, "bold")
+    FONT_LARGE = (font_fam, 11, "bold")
+
+def save_settings(new_settings):
+    """ Save settings to JSON file and reload them """
+    global current_settings
+    current_settings.update(new_settings)
+    try:
+        with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
+            json.dump(current_settings, f, indent=4)
+    except: pass
+    load_settings()
+
+load_settings()
