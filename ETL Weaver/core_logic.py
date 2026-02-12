@@ -74,6 +74,7 @@ def run_conversion(etl_path, pdb_path, postfix, callbacks):
 
 def run_file_splitting(txt_path, split_size, unit, estimated_files, postfix, callbacks):
     try:
+        import math
         chunk_size = (split_size * 1024) if unit == "KB" else (split_size * 1024 * 1024)
         file_count = 0
         with open(txt_path, 'r', encoding='utf-8', errors='ignore') as f_in:

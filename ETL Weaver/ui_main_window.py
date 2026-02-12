@@ -86,8 +86,6 @@ class TextSplitterApp(TkinterDnD.Tk):
     def update_styles(self):
         theme = self.settings["theme"]
         ui_font = (self.settings["ui_font_family"], self.settings["ui_font_size"])
-        log_font = (self.settings["log_font_family"], self.settings["log_font_size"])
-        
         style = ttk.Style()
         style.configure(".", font=ui_font)
         style.configure("TLabel", font=ui_font)
@@ -106,18 +104,10 @@ class TextSplitterApp(TkinterDnD.Tk):
             style.configure("Secondary.TLabel", background="#f3f3f3", foreground="#666666")
         
         if self.log_text:
-            self.log_text.configure(font=log_font)
             if theme == "dark":
                 self.log_text.configure(bg="#1c1c1c", fg="#e0e0e0", insertbackground="white")
             else:
                 self.log_text.configure(bg="#ffffff", fg="#000000", insertbackground="black")
-
-        if self.pdb_listbox:
-            self.pdb_listbox.configure(font=ui_font)
-            if theme == "dark":
-                self.pdb_listbox.configure(bg="#2b2b2b", fg="#ffffff")
-            else:
-                self.pdb_listbox.configure(bg="#f5f5f5", fg="#000000")
 
     def refresh_ui(self):
         log_content = self.log_text.get("1.0", tk.END) if self.log_text else ""
@@ -133,13 +123,13 @@ class TextSplitterApp(TkinterDnD.Tk):
             self.log_text.config(state="disabled")
 
     def create_widgets(self):
-        # 1. Status Bar (Fixed at Bottom)
+        # 1. Status Bar
         status_bar = ttk.Frame(self, padding=(12, 3), style="Secondary.TFrame")
         status_bar.pack(side="bottom", fill="x")
         ttk.Label(status_bar, textvariable=self.status, font=(self.settings["ui_font_family"], 8, "italic"), style="Secondary.TLabel").pack(side="left")
         ttk.Label(status_bar, text=f"v{APP_VERSION}", font=(self.settings["ui_font_family"], 8), style="Secondary.TLabel").pack(side="right")
 
-        # 2. Main Scrollable Container (Fills middle)
+        # 2. Main Scrollable Container
         main_container = ttk.Frame(self, padding=(20, 10, 20, 10))
         main_container.pack(side="top", fill="both", expand=True)
         main_container.columnconfigure(0, weight=1)
@@ -148,7 +138,6 @@ class TextSplitterApp(TkinterDnD.Tk):
         header_frame = ttk.Frame(main_container)
         header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         ttk.Label(header_frame, text=APP_TITLE, font=(self.settings["ui_font_family"], 16, "bold")).pack(side="left")
-        
         ttk.Button(header_frame, text="⚙ Settings", width=12, command=self.open_settings_dialog).pack(side="right", padx=(10, 0))
         
         if self.show_sys_info:
@@ -188,30 +177,17 @@ class TextSplitterApp(TkinterDnD.Tk):
 
     def create_drop_zone(self, parent):
         drop_card = ttk.Frame(parent, padding=1, style="Card.TFrame")
-        
         def setup_dnd(widget):
             widget.drop_target_register(DND_FILES)
             widget.dnd_bind('<<Drop>>', self.handle_drop)
-            for child in widget.winfo_children():
-                setup_dnd(child)
-
+            for child in widget.winfo_children(): setup_dnd(child)
         inner = ttk.Frame(drop_card, padding=15)
         inner.pack(fill="both", expand=True)
         inner.columnconfigure(1, weight=1)
-        
-        # UI Elements
-        icon_lbl = ttk.Label(inner, text="📂", font=("Segoe UI Symbol", 28))
-        icon_lbl.grid(row=0, column=0, rowspan=2, padx=(0, 15))
-        
-        title_lbl = ttk.Label(inner, text="Drag & Drop files here", font=(self.settings["ui_font_family"], 11, "bold"))
-        title_lbl.grid(row=0, column=1, sticky="w")
-        
-        sub_lbl = ttk.Label(inner, text="Supports .etl, .pdb, and .txt files", font=(self.settings["ui_font_family"], 9))
-        sub_lbl.grid(row=1, column=1, sticky="w")
-        
-        # Apply DnD to card and all current/future children
+        ttk.Label(inner, text="📂", font=("Segoe UI Symbol", 28)).grid(row=0, column=0, rowspan=2, padx=(0, 15))
+        ttk.Label(inner, text="Drag & Drop files here", font=(self.settings["ui_font_family"], 11, "bold")).grid(row=0, column=1, sticky="w")
+        ttk.Label(inner, text="Supports .etl, .pdb, and .txt files", font=(self.settings["ui_font_family"], 9)).grid(row=1, column=1, sticky="w")
         setup_dnd(drop_card)
-        
         return drop_card
 
     def create_file_info_panel(self, parent):
@@ -226,15 +202,10 @@ class TextSplitterApp(TkinterDnD.Tk):
     def create_txt_settings_panel(self, parent):
         sf = ttk.LabelFrame(parent, text=" TXT Setting ", padding=12)
         sf.columnconfigure((0, 1, 2, 3), weight=1)
-        
-        # --- Left Side: Rename & Info ---
         ttk.Label(sf, text="Postfix:").grid(row=0, column=0, sticky="e", padx=(0, 8), pady=6)
         ttk.Entry(sf, textvariable=self.txt_postfix).grid(row=0, column=1, sticky="ew", pady=6, padx=(0, 20))
-
         ttk.Label(sf, text="Size:").grid(row=1, column=0, sticky="e", padx=(0, 8), pady=6)
         ttk.Label(sf, textvariable=self.original_size, font=(self.settings["ui_font_family"], 9, "bold")).grid(row=1, column=1, sticky="w")
-        
-        # --- Right Side: Split Settings ---
         ttk.Label(sf, text="Split Size:").grid(row=0, column=2, sticky="e", padx=(0, 8), pady=6)
         si = ttk.Frame(sf)
         si.grid(row=0, column=3, sticky="w")
@@ -242,7 +213,6 @@ class TextSplitterApp(TkinterDnD.Tk):
         ucb = ttk.Combobox(si, textvariable=self.split_size_unit, values=["KB", "MB"], width=5, state="readonly")
         ucb.pack(side="left")
         ucb.bind("<<ComboboxSelected>>", self.update_estimated_files)
-        
         ttk.Label(sf, text="Est. Parts:").grid(row=1, column=2, sticky="e", padx=(0, 8), pady=6)
         ttk.Label(sf, textvariable=self.estimated_files, font=(self.settings["ui_font_family"], 9, "bold")).grid(row=1, column=3, sticky="w")
         return sf
@@ -273,16 +243,12 @@ class TextSplitterApp(TkinterDnD.Tk):
     def create_action_buttons(self, parent):
         af = ttk.Frame(parent)
         af.columnconfigure((0, 1, 2, 3), weight=1)
-        
         self.convert_button = ttk.Button(af, text="Convert ETL", style="Accent.TButton", command=self.start_conversion_thread, state="disabled")
         self.convert_button.grid(row=0, column=0, sticky="ew", ipady=8, padx=(0, 5))
-        
         self.split_button = ttk.Button(af, text="Split TXT", command=self.start_split_thread, state="disabled")
         self.split_button.grid(row=0, column=1, sticky="ew", ipady=8, padx=(5, 5))
-        
         self.rename_button = ttk.Button(af, text="Rename TXT", command=self.rename_txt_file, state="disabled")
         self.rename_button.grid(row=0, column=2, sticky="ew", ipady=8, padx=(5, 5))
-        
         self.open_folder_button = ttk.Button(af, text="Open Folder", command=self._open_txt_folder, state="disabled")
         self.open_folder_button.grid(row=0, column=3, sticky="ew", ipady=8, padx=(5, 0))
         return af
@@ -299,15 +265,11 @@ class TextSplitterApp(TkinterDnD.Tk):
         lf = ttk.LabelFrame(parent, text=" Command Execution Log ", padding=12)
         lf.columnconfigure(0, weight=1)
         lf.rowconfigure(0, weight=1)
-        
-        # Use themed Scrollbar and standard Text combined
         self.log_text = tk.Text(lf, wrap=tk.WORD, state="disabled", borderwidth=0, highlightthickness=0)
         self.log_text.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
-        
         sb = ttk.Scrollbar(lf, orient="vertical", command=self.log_text.yview)
         sb.grid(row=0, column=1, sticky="ns", pady=(0, 10))
         self.log_text.configure(yscrollcommand=sb.set)
-        
         br = ttk.Frame(lf)
         br.grid(row=1, column=0, columnspan=2, sticky="e")
         ttk.Button(br, text="Save Log", command=self._save_log).pack(side="left", padx=5)
@@ -321,60 +283,43 @@ class TextSplitterApp(TkinterDnD.Tk):
         sw.resizable(False, False)
         sw.transient(self)
         sw.grab_set()
-        
-        try:
-            sw.iconbitmap(resource_path("icon.ico"))
+        try: sw.iconbitmap(resource_path("icon.ico"))
         except: pass
-
         sw.update_idletasks()
         x = self.winfo_x() + (self.winfo_width() // 2) - (sw.winfo_width() // 2)
         y = self.winfo_y() + (self.winfo_height() // 2) - (sw.winfo_height() // 2)
         sw.geometry(f"+{x}+{y}")
-
         container = ttk.Frame(sw, padding=20)
         container.pack(fill="both", expand=True)
         container.columnconfigure(1, weight=1)
-
         p = {"padx": 10, "pady": 8}
         ttk.Label(container, text="Theme:").grid(row=0, column=0, sticky="w", **p)
         tv = tk.StringVar(value=self.settings.get("theme", "dark"))
         ttk.Combobox(container, textvariable=tv, values=["dark", "light"], state="readonly").grid(row=0, column=1, sticky="ew", **p)
-        
         fonts = sorted(tkfont.families())
         ttk.Label(container, text="UI Font Family:").grid(row=1, column=0, sticky="w", **p)
         fv = tk.StringVar(value=self.settings.get("ui_font_family", "Segoe UI"))
         ttk.Combobox(container, textvariable=fv, values=fonts, state="readonly").grid(row=1, column=1, sticky="ew", **p)
-        
         ttk.Label(container, text="UI Font Size:").grid(row=2, column=0, sticky="w", **p)
         sv = tk.IntVar(value=self.settings.get("ui_font_size", 10))
         ttk.Spinbox(container, from_=8, to=24, textvariable=sv).grid(row=2, column=1, sticky="ew", **p)
-        
         ttk.Label(container, text="Default PDB Path:").grid(row=3, column=0, sticky="w", **p)
         path_frame = ttk.Frame(container)
         path_frame.grid(row=3, column=1, sticky="ew", **p)
         path_frame.columnconfigure(0, weight=1)
-        
         pv = tk.StringVar(value=self.settings.get("pdb_path", "C:\\"))
         ttk.Entry(path_frame, textvariable=pv).grid(row=0, column=0, sticky="ew", padx=(0, 5))
-        
         def b_pdb():
             path = filedialog.askdirectory(initialdir=pv.get())
             if path: pv.set(path)
         ttk.Button(path_frame, text="Browse", width=8, command=b_pdb).grid(row=0, column=1, sticky="e")
-        
         def save():
-            self.settings.update({
-                "theme": tv.get(), 
-                "ui_font_family": fv.get(), 
-                "ui_font_size": sv.get(), 
-                "pdb_path": pv.get()
-            })
+            self.settings.update({"theme": tv.get(), "ui_font_family": fv.get(), "ui_font_size": sv.get(), "pdb_path": pv.get()})
             save_settings(self.settings)
             sv_ttk.set_theme(self.settings["theme"])
             sw.destroy()
             self.refresh_ui()
             self.status.set("Settings applied.")
-            
         br = ttk.Frame(container)
         br.grid(row=5, column=0, columnspan=2, pady=(30, 0))
         ttk.Button(br, text="Save Settings", style="Accent.TButton", command=save, width=15).pack(side="left", padx=5)
@@ -382,13 +327,11 @@ class TextSplitterApp(TkinterDnD.Tk):
 
     def _reset_pdb_path(self):
         dp = self.settings.get("pdb_path")
-        if not dp or not os.path.isdir(dp):
-            dp = os.path.join(get_executable_dir(), 'symbol')
+        if not dp or not os.path.isdir(dp): dp = os.path.join(get_executable_dir(), 'symbol')
         self.pdb_search_path.set(dp)
         self._scan_pdb_folder(dp)
 
-    def _scan_pdb_from_entry(self):
-        self._scan_pdb_folder(self.pdb_search_path.get())
+    def _scan_pdb_from_entry(self): self._scan_pdb_folder(self.pdb_search_path.get())
 
     def _scan_pdb_folder(self, folder_path):
         if not self.pdb_listbox: return
@@ -417,7 +360,7 @@ class TextSplitterApp(TkinterDnD.Tk):
         tp = self.txt_path.get()
         if tp and os.path.exists(tp):
             try: os.startfile(os.path.dirname(tp))
-            except Exception as e: self.show_message("Error", str(e))
+            except Exception as e: messagebox.showerror("Error", str(e))
 
     def _save_log(self):
         content = self.log_text.get("1.0", tk.END)
@@ -426,7 +369,7 @@ class TextSplitterApp(TkinterDnD.Tk):
         if fp:
             try:
                 with open(fp, 'w', encoding='utf-8') as f: f.write(content)
-            except Exception as e: self.show_message("Error", str(e))
+            except Exception as e: messagebox.showerror("Error", str(e))
 
     def clear_log(self):
         if self.log_text:
@@ -496,38 +439,26 @@ class TextSplitterApp(TkinterDnD.Tk):
         except: self.estimated_files.set("N/A")
 
     def start_split_thread(self):
-        self.split_button.config(state="disabled")
         self.status.set("Splitting...")
-        cb = { 'log': self.log_message, 'status': lambda m: self.after(0, self.status.set, m), 'success': lambda m: self.show_message("Success", m), 'failure': lambda m: self.show_message("Error", m) }
-        try:
-            sv = int(self.split_size_value.get())
-            ef = int(self.estimated_files.get()) if self.estimated_files.get().isdigit() else 1
-            threading.Thread(target=core_logic.run_file_splitting, args=(self.txt_path.get(), sv, self.split_size_unit.get(), ef, self.txt_postfix.get(), cb), daemon=True).start()
-        except: self.show_message("Error", "Invalid input")
+        success = core_logic.run_file_splitting(self.txt_path.get(), int(self.split_size_value.get()), self.split_size_unit.get(), self.txt_postfix.get(), {'status': self.status.set})
+        if success: messagebox.showinfo("Success", "Split complete!")
 
     def rename_txt_file(self):
         old_path = self.txt_path.get()
         postfix = self.txt_postfix.get().strip()
         if not old_path or not os.path.exists(old_path): return
-        if not postfix:
-            self.show_message("Warning", "Please enter a postfix first.")
-            return
-            
+        if not postfix: return
         try:
             directory = os.path.dirname(old_path)
             base, ext = os.path.splitext(os.path.basename(old_path))
-            if base.endswith(f"_{postfix}"):
-                self.show_message("Info", "File already has this postfix.")
-                return
+            if base.endswith(f"_{postfix}"): return
             new_name = f"{base}_{postfix}{ext}"
             new_path = os.path.join(directory, new_name)
             os.rename(old_path, new_path)
             self.txt_path.set(new_path)
-            self.log_message(f"SUCCESS: Renamed to {new_name}\n")
             self.status.set("File renamed.")
-        except Exception as e:
-            self.show_message("Error", f"Rename failed: {e}")
+        except Exception as e: messagebox.showerror("Error", f"Rename failed: {e}")
 
-    def show_message(self, title, message):
-        if "error" in title.lower(): messagebox.showerror(title, message)
-        else: messagebox.showinfo(title, message)
+if __name__ == "__main__":
+    app = TextSplitterApp()
+    app.mainloop()
