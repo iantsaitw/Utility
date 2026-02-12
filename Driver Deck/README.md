@@ -22,9 +22,24 @@
 - **One-Click Signing**: Seamless integration with `signtool.exe` and PFX management.
 - **Category Filter**: Instant toggle between PCIE, USB, and Symbol/No Symbol views.
 
-### 📦 Safe Archiving
-- **Atomic Backups**: Instant source archival with smart timestamping.
-- **Sorting Priority**: Backups are automatically prioritized in the view.
+---
+
+## 📂 Project Architecture
+
+```text
+Driver Deck/
+├── scripts/             # Automation hub (build.bat, release.bat)
+├── dist/                # Production binaries (DriverDeck.exe)
+├── release/             # Local versioned archives (Git ignored)
+├── main.py              # Application entry and window orchestration
+├── terminal_widget.py   # Low-level Win32 window embedding & focus logic
+├── project_tab.py       # Driver lifecycle logic and UI tab management
+├── config.py            # Dynamic settings and versioning (VERSION sync)
+├── driver_utils.py      # Win32 versioning and SignTool helpers
+├── ui_factory.py        # Modular Win11-themed widget factory
+├── VERSION              # Single source of truth for versioning
+└── icon.ico             # High-DPI application branding
+```
 
 ---
 

@@ -21,9 +21,24 @@
 - **Instant Rename**: Dedicated logic to apply postfix renaming to existing logs.
 - **Dual-Column Settings**: Balanced UI for fine-grained splitting control.
 
-### 🎨 Design & Experience
-- **Dynamic Theming**: Windows 11 Dark/Light mode support.
-- **Persistent Memory**: Saves your font preferences and symbol paths.
+---
+
+## 📂 Project Architecture
+
+```text
+ETL Weaver/
+├── scripts/             # Automation hub (build.bat, release.bat)
+├── trace_tools/         # Bundled verified MS trace binaries
+├── dist/                # Production binaries (ETLWeaver.exe)
+├── release/             # Local versioned archives (Git ignored)
+├── main.py              # Application entry point
+├── ui_main_window.py    # Win11 Fluent UI and logic orchestration
+├── core_logic.py        # Conversion, Splitting, and Renaming algorithms
+├── config.py            # App settings and dynamic VERSION handling
+├── utils.py             # Path helpers and data formatting
+├── VERSION              # Version source of truth
+└── icon.ico             # Application branding
+```
 
 ---
 

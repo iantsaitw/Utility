@@ -18,26 +18,38 @@ This repository serves as a centralized hub for engineering utilities designed t
 
 ---
 
-## 💎 Infrastructure Standards
+## 📂 Repository Anatomy
+
+```text
+Utility/
+├── 🚢 Driver Deck/      # Flagship Driver management and build system
+├── 🧶 ETL Weaver/       # High-speed diagnostic trace analysis engine
+├── .gitignore           # Global exclude rules for build artifacts and backups
+├── GEMINI.md            # Master status record and global release workflow
+└── README.md            # Suite entrance and project matrix (this file)
+```
+
+## 🏗️ Architecture & Standards
 
 - **[Unified Release System](./GEMINI.md)**: Standardized `release.bat` ensures 100% binary integrity and automated documentation.
 - **Modern UI Architecture**: Built with `sv-ttk` for a native Windows 11 Fluent Design experience.
 - **Industrial Stability**: Includes advanced Win32 focus management and high-process-priority execution.
 
-## 🛠️ Global Prerequisites
+---
 
-To run or build these tools, ensure your environment meets the following:
+## 🛠️ Global Requirements
+
 - **OS**: Windows 10/11 (x64 Required).
 - **Toolchain**: Visual Studio 2022 + WDK (for driver-related features).
 - **Environment**: Python 3.10+ with `pip install sv-ttk tkinterdnd2 psutil`.
 
 ---
 
-## 👨‍💻 Release Guide
+## 👨‍💻 Developer Guide
 To deploy a new version of any component:
 1. Commit your functional changes.
-2. Navigate to `scripts/` and run `release.bat`.
-3. The system will handle **Build -> Archive -> Tag -> Sync -> Publish** autonomously.
+2. Navigate to the project's `scripts/` folder.
+3. Run `release.bat`.
 
 ---
 *Internal Engineering Toolset - Realtek Semiconductor Corp.*
