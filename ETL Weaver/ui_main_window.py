@@ -188,14 +188,30 @@ class TextSplitterApp(TkinterDnD.Tk):
 
     def create_drop_zone(self, parent):
         drop_card = ttk.Frame(parent, padding=1, style="Card.TFrame")
-        drop_card.drop_target_register(DND_FILES)
-        drop_card.dnd_bind('<<Drop>>', self.handle_drop)
+        
+        def setup_dnd(widget):
+            widget.drop_target_register(DND_FILES)
+            widget.dnd_bind('<<Drop>>', self.handle_drop)
+            for child in widget.winfo_children():
+                setup_dnd(child)
+
         inner = ttk.Frame(drop_card, padding=15)
         inner.pack(fill="both", expand=True)
         inner.columnconfigure(1, weight=1)
-        ttk.Label(inner, text="📂", font=("Segoe UI Symbol", 28)).grid(row=0, column=0, rowspan=2, padx=(0, 15))
-        ttk.Label(inner, text="Drag & Drop files here", font=(self.settings["ui_font_family"], 11, "bold")).grid(row=0, column=1, sticky="w")
-        ttk.Label(inner, text="Supports .etl, .pdb, and .txt files", font=(self.settings["ui_font_family"], 9)).grid(row=1, column=1, sticky="w")
+        
+        # UI Elements
+        icon_lbl = ttk.Label(inner, text="📂", font=("Segoe UI Symbol", 28))
+        icon_lbl.grid(row=0, column=0, rowspan=2, padx=(0, 15))
+        
+        title_lbl = ttk.Label(inner, text="Drag & Drop files here", font=(self.settings["ui_font_family"], 11, "bold"))
+        title_lbl.grid(row=0, column=1, sticky="w")
+        
+        sub_lbl = ttk.Label(inner, text="Supports .etl, .pdb, and .txt files", font=(self.settings["ui_font_family"], 9))
+        sub_lbl.grid(row=1, column=1, sticky="w")
+        
+        # Apply DnD to card and all current/future children
+        setup_dnd(drop_card)
+        
         return drop_card
 
     def create_file_info_panel(self, parent):
@@ -283,10 +299,17 @@ class TextSplitterApp(TkinterDnD.Tk):
         lf = ttk.LabelFrame(parent, text=" Command Execution Log ", padding=12)
         lf.columnconfigure(0, weight=1)
         lf.rowconfigure(0, weight=1)
-        self.log_text = scrolledtext.ScrolledText(lf, wrap=tk.WORD, state="disabled", borderwidth=0, highlightthickness=0)
+        
+        # Use themed Scrollbar and standard Text combined
+        self.log_text = tk.Text(lf, wrap=tk.WORD, state="disabled", borderwidth=0, highlightthickness=0)
         self.log_text.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
+        
+        sb = ttk.Scrollbar(lf, orient="vertical", command=self.log_text.yview)
+        sb.grid(row=0, column=1, sticky="ns", pady=(0, 10))
+        self.log_text.configure(yscrollcommand=sb.set)
+        
         br = ttk.Frame(lf)
-        br.grid(row=1, column=0, sticky="e")
+        br.grid(row=1, column=0, columnspan=2, sticky="e")
         ttk.Button(br, text="Save Log", command=self._save_log).pack(side="left", padx=5)
         ttk.Button(br, text="Clear Log", command=self.clear_log).pack(side="left")
         return lf
