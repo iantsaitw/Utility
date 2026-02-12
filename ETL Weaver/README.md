@@ -59,4 +59,32 @@ graph TD
 | **Import Error** | Run `scripts/build.bat` to ensure all config constants are bundled. |
 
 ---
+
+## 📂 Project Architecture
+
+```text
+ETL Weaver/
+├── scripts/             # Automation hub (build.bat, release.bat)
+├── trace_tools/         # Bundled verified MS trace binaries (TraceView, TraceFmt)
+├── dist/                # Production binaries (ETLWeaver.exe)
+├── release/             # Local versioned archives (Git ignored)
+├── main.py              # Application entry point
+├── ui_main_window.py    # Win11 Fluent UI and logic orchestration
+├── core_logic.py        # Conversion, Splitting, and Renaming algorithms
+├── config.py            # App settings and dynamic VERSION handling
+├── utils.py             # Path helpers and data formatting
+├── VERSION              # Version source of truth (Bump this for release)
+└── icon.ico             # Application branding
+```
+
+---
+
+## 🚀 Quick Start
+
+### 📦 For Users (Portable EXE)
+1. Download `ETLWeaver.exe` from [Latest Releases](https://github.com/iantsaitw/Utility/releases).
+2. Load your **ETL** and corresponding **PDB** files via drag & drop.
+3. Click **Convert** to generate analyzed output.
+
+---
 *Status: Production Ready | v1.1.0*

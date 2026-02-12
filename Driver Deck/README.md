@@ -63,7 +63,38 @@ graph LR
 ---
 
 ## 📂 Project Architecture
-*(See GEMINI.md for deep technical implementation details)*
+
+```text
+Driver Deck/
+├── scripts/             # Automation hub (build.bat, release.bat)
+├── dist/                # Production binaries (DriverDeck.exe)
+├── release/             # Local versioned archives (Git ignored)
+├── main.py              # Application entry and window orchestration
+├── terminal_widget.py   # Low-level Win32 window embedding & focus logic
+├── project_tab.py       # Driver lifecycle logic and UI tab management
+├── config.py            # Dynamic settings and versioning (VERSION sync)
+├── driver_utils.py      # Win32 versioning and SignTool helpers
+├── ui_factory.py        # Modular Win11-themed widget factory
+├── VERSION              # Single source of truth for versioning (Bump this for release)
+└── icon.ico             # High-DPI application branding
+```
+
+---
+
+## 🚀 Quick Start
+
+### 📦 For Users (Portable EXE)
+1. Download `DriverDeck.exe` from [Latest Releases](https://github.com/iantsaitw/Utility/releases).
+2. **Run as Administrator** (Required for terminal and driver access).
+
+### ⌨️ For Developers (Source)
+```powershell
+# Clone and install
+pip install sv-ttk
+
+# Launch
+python main.py
+```
 
 ---
 *Status: Production Ready | v1.2.1*
