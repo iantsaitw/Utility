@@ -37,19 +37,16 @@ Utility/
 
 ---
 
-## 🛠️ Global Requirements
-
-- **OS**: Windows 10/11 (x64 Required).
-- **Toolchain**: Visual Studio 2022 + WDK (for driver-related features).
-- **Environment**: Python 3.10+ with `pip install sv-ttk tkinterdnd2 psutil`.
+## 👨‍💻 Release Workflow
+To deploy a new version:
+1. **Commit** your functional changes to Git.
+2. **Bump** the version string in the project's `VERSION` file (e.g., `1.2.1` -> `1.2.2`).
+3. **Run** `scripts/release.bat`.
+4. The system handles **Build -> Local Archive -> Git Tag -> Push -> GitHub Release** automatically.
 
 ---
-
-## 👨‍💻 Developer Guide
-To deploy a new version of any component:
-1. Commit your functional changes.
-2. Navigate to the project's `scripts/` folder.
-3. Run `release.bat`.
+## 🤝 Support & Contribution
+For bug reports or feature requests, please use the [GitHub Issues](https://github.com/iantsaitw/Utility/issues) or contact the internal tool team.
 
 ---
 *Internal Engineering Toolset - Realtek Semiconductor Corp.*

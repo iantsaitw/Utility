@@ -9,6 +9,11 @@
 
 ---
 
+## 📸 Screenshots
+*(Add your latest UI screenshots here to showcase the Windows 11 design)*
+
+---
+
 ## ✨ Key Capabilities
 
 ### 🖥️ Immersive Terminal (Win32 Embedded)
@@ -21,6 +26,17 @@
 - **Project Intelligence**: Auto-scans and categorizes PCIE/USB driver trees.
 - **One-Click Signing**: Seamless integration with `signtool.exe` and PFX management.
 - **Category Filter**: Instant toggle between PCIE, USB, and Symbol/No Symbol views.
+
+---
+
+## 🔍 Troubleshooting
+
+| Issue | Solution |
+| :--- | :--- |
+| **Terminal is blank/empty** | Ensure you run the application as **Administrator**. |
+| **Cannot type in Suffix box** | Click anywhere on the UI to break the terminal's focus lock. |
+| **Missing VS Environment** | Ensure Visual Studio 2022 is installed in the default directory. |
+| **SignTool not found** | Install the Windows SDK or specify the path in `settings.json`. |
 
 ---
 
@@ -37,7 +53,7 @@ Driver Deck/
 ├── config.py            # Dynamic settings and versioning (VERSION sync)
 ├── driver_utils.py      # Win32 versioning and SignTool helpers
 ├── ui_factory.py        # Modular Win11-themed widget factory
-├── VERSION              # Single source of truth for versioning
+├── VERSION              # Single source of truth for versioning (Bump this for release)
 └── icon.ico             # High-DPI application branding
 ```
 
@@ -57,11 +73,6 @@ pip install sv-ttk
 # Launch
 python main.py
 ```
-
----
-
-## 📜 Roadmap & History
-Stay up to date with the latest architectural changes in [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 *Status: Production Ready | v1.2.1*
