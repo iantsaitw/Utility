@@ -1,27 +1,23 @@
 # ETL Weaver - Project Status Record
 
-## Current Version: 1.0.0 (Settings & Stability Update)
+## Current Version: 1.0.0 (Feature & Stability Update)
 **Last Updated:** 2026-02-11
 
 ---
 
 ## 1. Feature Highlights
-- **Persistent Settings:** Custom UI font and theme (Dark/Light) saved to `settings.json`.
-- **Conversion Core:** Bundled stable `traceview.exe` to ensure ETL data integrity.
-- **Naming Alignment:** Standardized executable name to `ETLWeaver.exe` to match the suite's style.
+- **TXT Setting & Postfix**: Added a "Postfix" input field. Both ETL conversion and splitting now support custom filename suffixes.
+- **Rename TXT**: New dedicated button to apply the current Postfix to the loaded TXT file immediately.
+- **UI Refactoring**: 
+    - "TXT Setting" is now a clean two-column layout.
+    - Improved "Settings" dialog with centering, application icon, and fixed PDB path input.
+- **Stability**: Fixed major `config.py` ImportError and class structure issues in `ui_main_window.py`.
 
 ## 2. Standardized Release Process (release.bat)
 Consistent with the Utility Suite's workflow:
 1. **Build Integrity**: Mandatory `build.bat` check before release.
-2. **Humanized Logging**: Opens **Notepad** for manual refinement of release notes (convert Git logs to ### Added/Fixed).
+2. **Humanized Logging**: Opens Notepad for manual log refinement.
 3. **Automated Deployment**: One-click Git push, Tagging, and GitHub Release.
-4. **Asset Management**: Automatically uploads `dist\ETLWeaver.exe`.
-
-## 3. Project Structure
-- `main.py`: Entry point.
-- `ui_main_window.py`: Modern UI with `sv-ttk` support.
-- `trace_tools/`: Multi-tool bundle (`traceview.exe`, `tracefmt.exe`).
-- `scripts/`: Centralized `build.bat` and `release.bat`.
 
 ---
-*Status: Finalized and Stable.*
+*Status: Feature Enhanced & Stable.*

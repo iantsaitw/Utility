@@ -38,6 +38,7 @@ DEFAULT_SETTINGS = {
     "signtool_path": "",
     "last_tab": "",
     "filter_mode": "All",
+    "symbol_filter": "All",
     "split_ratio": 0.6
 }
 

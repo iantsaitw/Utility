@@ -59,10 +59,8 @@ class TerminalFrame(ttk.Frame):
         self.btn_restart = ttk.Button(self, text="🔄 Restart", width=10, command=self.restart_terminal)
         self.btn_restart.place(relx=1.0, rely=1.0, x=-10, y=-10, anchor="se")
         
-        # Focus recovery bindings
+        # Focus recovery bindings: ONLY on hard click
         self.container.bind("<Button-1>", self.force_focus)
-        self.container.bind("<FocusIn>", self.force_focus)
-        self.container.bind("<Enter>", self.force_focus)
 
     def force_focus(self, event=None):
         """ Forcefully give keyboard focus to the embedded Win32 window """
@@ -72,7 +70,7 @@ class TerminalFrame(ttk.Frame):
             if gui_thread != cmd_thread:
                 user32.AttachThreadInput(gui_thread, cmd_thread, True)
                 user32.SetFocus(self.cmd_hwnd)
-                user32.SetActiveWindow(self.cmd_hwnd)
+                # Removed SetActiveWindow(self.cmd_hwnd) as it steals global focus
                 user32.AttachThreadInput(gui_thread, cmd_thread, False)
             else:
                 user32.SetFocus(self.cmd_hwnd)
@@ -166,7 +164,7 @@ class TerminalFrame(ttk.Frame):
                     user32.SetParent(self.cmd_hwnd, parent_hwnd)
                     user32.SetWindowPos(self.cmd_hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED)
                     self.on_resize(is_first=True)
-                    self.after(100, self.force_focus)
+                    # Removed self.after(100, self.force_focus) to avoid stealing focus on start
         except: pass
         self.after(0, self._finalize_ui_state)
 

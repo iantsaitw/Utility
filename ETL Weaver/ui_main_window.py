@@ -46,6 +46,7 @@ class TextSplitterApp(TkinterDnD.Tk):
         self.split_size_unit = tk.StringVar(value="MB")
         self.estimated_files = tk.StringVar(value="N/A")
         self.status = tk.StringVar(value="Ready to process files")
+        self.txt_postfix = tk.StringVar(value="")
         self.pdb_search_path = tk.StringVar()
         self.found_pdb_files = []
         
@@ -176,7 +177,7 @@ class TextSplitterApp(TkinterDnD.Tk):
 
         self.create_drop_zone(left_col).grid(row=0, column=0, sticky="ew", pady=(0, 10))
         self.create_file_info_panel(left_col).grid(row=1, column=0, sticky="ew", pady=(0, 10))
-        self.create_split_settings_panel(left_col).grid(row=2, column=0, sticky="ew", pady=(0, 10))
+        self.create_txt_settings_panel(left_col).grid(row=2, column=0, sticky="ew", pady=(0, 10))
         self.create_action_buttons(left_col).grid(row=3, column=0, sticky="ew", pady=(5, 0))
 
         self.create_pdb_browser_panel(right_col).grid(row=0, column=0, sticky="nsew")
@@ -206,20 +207,28 @@ class TextSplitterApp(TkinterDnD.Tk):
             ttk.Entry(info_frame, textvariable=var, state="readonly").grid(row=i, column=1, sticky="ew", pady=4)
         return info_frame
 
-    def create_split_settings_panel(self, parent):
-        sf = ttk.LabelFrame(parent, text=" TXT Split Settings ", padding=12)
-        sf.columnconfigure(1, weight=1)
-        ttk.Label(sf, text="Original Size:").grid(row=0, column=0, sticky="e", padx=(0, 8), pady=6)
-        ttk.Label(sf, textvariable=self.original_size, font=(self.settings["ui_font_family"], 9, "bold")).grid(row=0, column=1, sticky="w")
-        ttk.Label(sf, text="Split Size:").grid(row=1, column=0, sticky="e", padx=(0, 8), pady=6)
+    def create_txt_settings_panel(self, parent):
+        sf = ttk.LabelFrame(parent, text=" TXT Setting ", padding=12)
+        sf.columnconfigure((0, 1, 2, 3), weight=1)
+        
+        # --- Left Side: Rename & Info ---
+        ttk.Label(sf, text="Postfix:").grid(row=0, column=0, sticky="e", padx=(0, 8), pady=6)
+        ttk.Entry(sf, textvariable=self.txt_postfix).grid(row=0, column=1, sticky="ew", pady=6, padx=(0, 20))
+
+        ttk.Label(sf, text="Size:").grid(row=1, column=0, sticky="e", padx=(0, 8), pady=6)
+        ttk.Label(sf, textvariable=self.original_size, font=(self.settings["ui_font_family"], 9, "bold")).grid(row=1, column=1, sticky="w")
+        
+        # --- Right Side: Split Settings ---
+        ttk.Label(sf, text="Split Size:").grid(row=0, column=2, sticky="e", padx=(0, 8), pady=6)
         si = ttk.Frame(sf)
-        si.grid(row=1, column=1, sticky="w")
+        si.grid(row=0, column=3, sticky="w")
         ttk.Entry(si, textvariable=self.split_size_value, width=8).pack(side="left", padx=(0, 5))
         ucb = ttk.Combobox(si, textvariable=self.split_size_unit, values=["KB", "MB"], width=5, state="readonly")
         ucb.pack(side="left")
         ucb.bind("<<ComboboxSelected>>", self.update_estimated_files)
-        ttk.Label(sf, text="Est. Parts:").grid(row=2, column=0, sticky="e", padx=(0, 8), pady=6)
-        ttk.Label(sf, textvariable=self.estimated_files, font=(self.settings["ui_font_family"], 9, "bold")).grid(row=2, column=1, sticky="w")
+        
+        ttk.Label(sf, text="Est. Parts:").grid(row=1, column=2, sticky="e", padx=(0, 8), pady=6)
+        ttk.Label(sf, textvariable=self.estimated_files, font=(self.settings["ui_font_family"], 9, "bold")).grid(row=1, column=3, sticky="w")
         return sf
 
     def create_pdb_browser_panel(self, parent):
@@ -247,13 +256,19 @@ class TextSplitterApp(TkinterDnD.Tk):
 
     def create_action_buttons(self, parent):
         af = ttk.Frame(parent)
-        af.columnconfigure((0, 1, 2), weight=1)
+        af.columnconfigure((0, 1, 2, 3), weight=1)
+        
         self.convert_button = ttk.Button(af, text="Convert ETL", style="Accent.TButton", command=self.start_conversion_thread, state="disabled")
         self.convert_button.grid(row=0, column=0, sticky="ew", ipady=8, padx=(0, 5))
+        
         self.split_button = ttk.Button(af, text="Split TXT", command=self.start_split_thread, state="disabled")
         self.split_button.grid(row=0, column=1, sticky="ew", ipady=8, padx=(5, 5))
+        
+        self.rename_button = ttk.Button(af, text="Rename TXT", command=self.rename_txt_file, state="disabled")
+        self.rename_button.grid(row=0, column=2, sticky="ew", ipady=8, padx=(5, 5))
+        
         self.open_folder_button = ttk.Button(af, text="Open Folder", command=self._open_txt_folder, state="disabled")
-        self.open_folder_button.grid(row=0, column=2, sticky="ew", ipady=8, padx=(5, 0))
+        self.open_folder_button.grid(row=0, column=3, sticky="ew", ipady=8, padx=(5, 0))
         return af
 
     def _update_button_states(self):
@@ -261,6 +276,7 @@ class TextSplitterApp(TkinterDnD.Tk):
         self.convert_button.config(state="normal" if tr else "disabled")
         sr = self.txt_path.get() and os.path.exists(self.txt_path.get())
         self.split_button.config(state="normal" if sr else "disabled")
+        self.rename_button.config(state="normal" if sr else "disabled")
         self.open_folder_button.config(state="normal" if sr else "disabled")
 
     def create_log_panel(self, parent):
@@ -278,47 +294,71 @@ class TextSplitterApp(TkinterDnD.Tk):
     def open_settings_dialog(self):
         sw = tk.Toplevel(self)
         sw.title("Settings")
-        sw.geometry("450x450")
+        sw.geometry("480x480")
         sw.resizable(False, False)
         sw.transient(self)
         sw.grab_set()
-        x = self.winfo_x() + (self.winfo_width() // 2) - 225
-        y = self.winfo_y() + (self.winfo_height() // 2) - 225
+        
+        try:
+            sw.iconbitmap(resource_path("icon.ico"))
+        except: pass
+
+        sw.update_idletasks()
+        x = self.winfo_x() + (self.winfo_width() // 2) - (sw.winfo_width() // 2)
+        y = self.winfo_y() + (self.winfo_height() // 2) - (sw.winfo_height() // 2)
         sw.geometry(f"+{x}+{y}")
+
         container = ttk.Frame(sw, padding=20)
         container.pack(fill="both", expand=True)
+        container.columnconfigure(1, weight=1)
+
         p = {"padx": 10, "pady": 8}
         ttk.Label(container, text="Theme:").grid(row=0, column=0, sticky="w", **p)
-        tv = tk.StringVar(value=self.settings["theme"])
+        tv = tk.StringVar(value=self.settings.get("theme", "dark"))
         ttk.Combobox(container, textvariable=tv, values=["dark", "light"], state="readonly").grid(row=0, column=1, sticky="ew", **p)
+        
         fonts = sorted(tkfont.families())
-        ttk.Label(container, text="UI Font:").grid(row=1, column=0, sticky="w", **p)
-        fv = tk.StringVar(value=self.settings["ui_font_family"])
+        ttk.Label(container, text="UI Font Family:").grid(row=1, column=0, sticky="w", **p)
+        fv = tk.StringVar(value=self.settings.get("ui_font_family", "Segoe UI"))
         ttk.Combobox(container, textvariable=fv, values=fonts, state="readonly").grid(row=1, column=1, sticky="ew", **p)
+        
         ttk.Label(container, text="UI Font Size:").grid(row=2, column=0, sticky="w", **p)
-        sv = tk.IntVar(value=self.settings["ui_font_size"])
+        sv = tk.IntVar(value=self.settings.get("ui_font_size", 10))
         ttk.Spinbox(container, from_=8, to=24, textvariable=sv).grid(row=2, column=1, sticky="ew", **p)
+        
         ttk.Label(container, text="Default PDB Path:").grid(row=3, column=0, sticky="w", **p)
-        pv = tk.StringVar(value=self.settings["default_pdb_path"])
-        ttk.Entry(container, textvariable=pv).grid(row=3, column=1, sticky="ew", **p)
+        path_frame = ttk.Frame(container)
+        path_frame.grid(row=3, column=1, sticky="ew", **p)
+        path_frame.columnconfigure(0, weight=1)
+        
+        pv = tk.StringVar(value=self.settings.get("pdb_path", "C:\\"))
+        ttk.Entry(path_frame, textvariable=pv).grid(row=0, column=0, sticky="ew", padx=(0, 5))
+        
         def b_pdb():
-            path = filedialog.askdirectory()
+            path = filedialog.askdirectory(initialdir=pv.get())
             if path: pv.set(path)
-        ttk.Button(container, text="Browse", command=b_pdb).grid(row=4, column=1, sticky="e", padx=10)
+        ttk.Button(path_frame, text="Browse", width=8, command=b_pdb).grid(row=0, column=1, sticky="e")
+        
         def save():
-            self.settings.update({"theme": tv.get(), "ui_font_family": fv.get(), "ui_font_size": sv.get(), "default_pdb_path": pv.get()})
+            self.settings.update({
+                "theme": tv.get(), 
+                "ui_font_family": fv.get(), 
+                "ui_font_size": sv.get(), 
+                "pdb_path": pv.get()
+            })
             save_settings(self.settings)
             sv_ttk.set_theme(self.settings["theme"])
             sw.destroy()
             self.refresh_ui()
             self.status.set("Settings applied.")
+            
         br = ttk.Frame(container)
-        br.grid(row=5, column=0, columnspan=2, pady=(20, 0))
-        ttk.Button(br, text="Save", command=save).pack(side="left", padx=5)
-        ttk.Button(br, text="Cancel", command=sw.destroy).pack(side="left", padx=5)
+        br.grid(row=5, column=0, columnspan=2, pady=(30, 0))
+        ttk.Button(br, text="Save Settings", style="Accent.TButton", command=save, width=15).pack(side="left", padx=5)
+        ttk.Button(br, text="Cancel", command=sw.destroy, width=10).pack(side="left", padx=5)
 
     def _reset_pdb_path(self):
-        dp = self.settings.get("default_pdb_path")
+        dp = self.settings.get("pdb_path")
         if not dp or not os.path.isdir(dp):
             dp = os.path.join(get_executable_dir(), 'symbol')
         self.pdb_search_path.set(dp)
@@ -396,7 +436,7 @@ class TextSplitterApp(TkinterDnD.Tk):
             'success': lambda p: self.after(0, self.process_txt_file, p), 
             'failure': lambda m: self.after(0, self.status.set, m) 
         }
-        threading.Thread(target=core_logic.run_conversion, args=(self.etl_path.get(), self.pdb_path.get(), cb), daemon=True).start()
+        threading.Thread(target=core_logic.run_conversion, args=(self.etl_path.get(), self.pdb_path.get(), self.txt_postfix.get(), cb), daemon=True).start()
 
     def update_system_info(self):
         if not self.show_sys_info: return
@@ -439,8 +479,31 @@ class TextSplitterApp(TkinterDnD.Tk):
         try:
             sv = int(self.split_size_value.get())
             ef = int(self.estimated_files.get()) if self.estimated_files.get().isdigit() else 1
-            threading.Thread(target=core_logic.run_file_splitting, args=(self.txt_path.get(), sv, self.split_size_unit.get(), ef, cb), daemon=True).start()
+            threading.Thread(target=core_logic.run_file_splitting, args=(self.txt_path.get(), sv, self.split_size_unit.get(), ef, self.txt_postfix.get(), cb), daemon=True).start()
         except: self.show_message("Error", "Invalid input")
+
+    def rename_txt_file(self):
+        old_path = self.txt_path.get()
+        postfix = self.txt_postfix.get().strip()
+        if not old_path or not os.path.exists(old_path): return
+        if not postfix:
+            self.show_message("Warning", "Please enter a postfix first.")
+            return
+            
+        try:
+            directory = os.path.dirname(old_path)
+            base, ext = os.path.splitext(os.path.basename(old_path))
+            if base.endswith(f"_{postfix}"):
+                self.show_message("Info", "File already has this postfix.")
+                return
+            new_name = f"{base}_{postfix}{ext}"
+            new_path = os.path.join(directory, new_name)
+            os.rename(old_path, new_path)
+            self.txt_path.set(new_path)
+            self.log_message(f"SUCCESS: Renamed to {new_name}\n")
+            self.status.set("File renamed.")
+        except Exception as e:
+            self.show_message("Error", f"Rename failed: {e}")
 
     def show_message(self, title, message):
         if "error" in title.lower(): messagebox.showerror(title, message)

@@ -4,6 +4,7 @@ cd /d "%~dp0.."
 title ETL Weaver - Light Build
 
 echo [1/4] Killing existing processes...
+taskkill /F /IM "ETLWeaver.exe" /T >nul 2>&1
 taskkill /F /IM "ETL Weaver.exe" /T >nul 2>&1
 timeout /t 1 /nobreak >nul
 

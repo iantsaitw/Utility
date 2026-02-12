@@ -49,8 +49,21 @@ class App(tk.Tk):
         self.setup_theme()
         self.setup_ui()
         
+        # Global focus recovery: break terminal focus lock on click
+        self.bind_all("<Button-1>", self.on_global_click)
+        
         # Delay startup stabilization
         self.after(100, self._finalize_startup)
+
+    def on_global_click(self, event):
+        """ Force Win32 focus back to Python when clicking outside the terminal """
+        try:
+            # If the widget clicked is NOT the terminal container
+            if not str(event.widget).endswith(".container"):
+                hwnd = ctypes.windll.user32.GetAncestor(self.winfo_id(), 2)
+                ctypes.windll.user32.SetForegroundWindow(hwnd)
+                ctypes.windll.user32.SetFocus(hwnd)
+        except: pass
 
     def check_admin(self):
         try:

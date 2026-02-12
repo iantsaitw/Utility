@@ -7,14 +7,20 @@ import subprocess
 import psutil
 from utils import resource_path
 
-def run_conversion(etl_path, pdb_path, callbacks):
+def run_conversion(etl_path, pdb_path, postfix, callbacks):
     """
     Runs the ETL conversion using the bundled traceview.exe.
     This tool handles special characters and Traditional Chinese environments better.
     """
     etl_path = os.path.abspath(etl_path)
     pdb_path = os.path.abspath(pdb_path)
-    output_txt = os.path.abspath(os.path.join(os.path.dirname(etl_path), os.path.splitext(os.path.basename(etl_path))[0] + ".txt"))
+    
+    # Apply postfix to output name
+    base_name = os.path.splitext(os.path.basename(etl_path))[0]
+    if postfix.strip():
+        base_name = f"{base_name}_{postfix.strip()}"
+    
+    output_txt = os.path.abspath(os.path.join(os.path.dirname(etl_path), f"{base_name}.txt"))
     
     tools_dir = os.path.abspath(resource_path("trace_tools"))
     executable = os.path.join(tools_dir, "traceview.exe")
@@ -66,20 +72,26 @@ def run_conversion(etl_path, pdb_path, callbacks):
         callbacks['log'](f"\n--- FATAL ERROR: {e} ---\n")
         callbacks['failure'](str(e))
 
-def run_file_splitting(txt_path, split_size, unit, estimated_files, callbacks):
+def run_file_splitting(txt_path, split_size, unit, estimated_files, postfix, callbacks):
     try:
-        import math
         chunk_size = (split_size * 1024) if unit == "KB" else (split_size * 1024 * 1024)
         file_count = 0
         with open(txt_path, 'r', encoding='utf-8', errors='ignore') as f_in:
             directory = os.path.dirname(txt_path)
             base_name = os.path.splitext(os.path.basename(txt_path))[0]
+            
+            # Apply postfix to split parts as well if provided
+            if postfix.strip() and not base_name.endswith(postfix.strip()):
+                base_name = f"{base_name}_{postfix.strip()}"
+                
             while True:
                 chunk = f_in.read(chunk_size)
                 if not chunk: break
                 file_count += 1
                 callbacks['status'](f"Splitting: Part {file_count}...")
-                with open(os.path.join(directory, f"{base_name}_part_{file_count}.txt"), 'w', encoding='utf-8') as f_out:
+                
+                output_name = f"{base_name}_part_{file_count}.txt"
+                with open(os.path.join(directory, output_name), 'w', encoding='utf-8') as f_out:
                     f_out.write(chunk)
         callbacks['log'](f"SUCCESS: {file_count} parts created.\n")
         callbacks['success']("Split complete!")

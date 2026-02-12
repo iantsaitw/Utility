@@ -19,6 +19,7 @@ class ProjectTab(ttk.Frame):
         self.file_data_cache = []
         
         self.filter_var = tk.StringVar(value=config.current_settings.get("filter_mode", "All"))
+        self.symbol_filter_var = tk.StringVar(value=config.current_settings.get("symbol_filter", "All"))
         
         self.setup_ui()
         
@@ -82,6 +83,13 @@ class ProjectTab(ttk.Frame):
         for m in reversed(modes): 
             ttk.Radiobutton(d_toolbar, text=m, variable=self.filter_var, value=m, 
                             style="Toggle.TButton", command=self.on_filter_change).pack(side=tk.RIGHT, padx=4)
+
+        ttk.Separator(d_toolbar, orient="vertical").pack(side=tk.RIGHT, padx=10, fill=tk.Y)
+
+        symbol_modes = ["All", "Symbol", "No Symbol"]
+        for sm in reversed(symbol_modes):
+            ttk.Radiobutton(d_toolbar, text=sm, variable=self.symbol_filter_var, value=sm,
+                            style="Toggle.TButton", command=self.on_symbol_filter_change).pack(side=tk.RIGHT, padx=4)
 
         d_list_frame = ttk.Frame(driver_pane)
         d_list_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -185,6 +193,12 @@ class ProjectTab(ttk.Frame):
         config.save_settings({"filter_mode": mode})
         self.update_tree_view()
 
+    def on_symbol_filter_change(self):
+        """ Handle symbol radio button change """
+        mode = self.symbol_filter_var.get()
+        config.save_settings({"symbol_filter": mode})
+        self.update_tree_view()
+
     def sort_driver_list(self, col, reverse):
         """ Sort driver list by column """
         col_map = {"folder": 0, "version": 1, "date": 2, "path": 3}
@@ -195,17 +209,56 @@ class ProjectTab(ttk.Frame):
         self.update_tree_view()
 
     def update_tree_view(self):
-        """ Refresh Treeview display based on filter """
+        """ Refresh Treeview display based on filters """
         for item in self.driver_list.get_children(): self.driver_list.delete(item)
-        filter_mode = self.filter_var.get() 
+        filter_mode = self.filter_var.get()
+        symbol_filter = self.symbol_filter_var.get()
+        
         for item in self.cached_items:
             drv_type = item[4]
-            if filter_mode == "All" or filter_mode == drv_type:
-                display_values = (item[0], item[1], item[2], item[3])
-                self.driver_list.insert("", "end", values=display_values)
+            has_symbol = item[5] # Boolean
+            
+            # Interface filter (All, PCIE, USB)
+            if filter_mode != "All" and filter_mode != drv_type:
+                continue
+                
+            # Symbol filter (All, Symbol, No Symbol)
+            if symbol_filter == "Symbol" and not has_symbol:
+                continue
+            if symbol_filter == "No Symbol" and has_symbol:
+                continue
+                
+            display_values = (item[0], item[1], item[2], item[3])
+            self.driver_list.insert("", "end", values=display_values)
 
     def refresh_driver_list(self):
         """ Scan project directory for driver versions """
+        # --- Smart Update Suffix ---
+        # Record current cursor position to restore after update
+        try:
+            old_cursor = self.suffix_entry.index(tk.INSERT)
+            current_suffix = self.suffix_entry.get()
+            new_ts = driver_utils.get_time_suffix() # e.g. _20260211_1130
+            
+            import re
+            # Only auto-refresh if it matches the EXACT timestamp pattern (nothing after it)
+            # or if it's empty.
+            if not current_suffix or re.match(r"^_\d{8}_\d{4}$", current_suffix):
+                self.suffix_entry.delete(0, tk.END)
+                self.suffix_entry.insert(0, new_ts)
+            else:
+                # If user added something (e.g. _20260211_1130_fix), 
+                # we ONLY update the timestamp part and KEEP the rest.
+                ts_match = re.match(r"^(_\d{8}_\d{4})(.*)$", current_suffix)
+                if ts_match:
+                    updated_suffix = new_ts + ts_match.group(2)
+                    if updated_suffix != current_suffix:
+                        self.suffix_entry.delete(0, tk.END)
+                        self.suffix_entry.insert(0, updated_suffix)
+                        # Try to restore cursor
+                        self.suffix_entry.icursor(old_cursor)
+        except: pass
+
         for item in self.driver_list.get_children(): self.driver_list.delete(item)
         for item in self.file_list.get_children(): self.file_list.delete(item)
         self.selected_driver_path = None
@@ -216,6 +269,10 @@ class ProjectTab(ttk.Frame):
             for subpath in subpaths:
                 base_path = os.path.join(self.project_path, subpath)
                 if not os.path.exists(base_path): continue 
+                
+                # Check if this base path is a "Symbol" path
+                is_symbol_path = "(WithSymbol)" in subpath
+                
                 for root, dirs, files in os.walk(base_path):
                     for d in dirs:
                         full_path = os.path.join(root, d)
@@ -223,17 +280,28 @@ class ProjectTab(ttk.Frame):
                         if rel_path.lower() in ["win10", "win11"]: continue
                         ver_str = ""
                         date_str = ""
+                        raw_mtime = 0
                         try:
-                            mtime = os.path.getmtime(full_path)
-                            date_str = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M')
+                            raw_mtime = os.path.getmtime(full_path)
+                            date_str = datetime.datetime.fromtimestamp(raw_mtime).strftime('%Y-%m-%d %H:%M')
                             sys_files = [f for f in os.listdir(full_path) if f.lower().endswith(".sys")]
                             if sys_files:
                                 target_sys = os.path.join(full_path, sys_files[0])
                                 ver_str = driver_utils.get_file_version(target_sys)
                         except: pass
-                        self.cached_items.append((rel_path, ver_str, date_str, full_path, drv_type))
-        self.cached_items.sort(key=lambda x: x[0].lower())
+                        # item format: (name, version, date, full_path, type, has_symbol, raw_mtime)
+                        self.cached_items.append((rel_path, ver_str, date_str, full_path, drv_type, is_symbol_path, raw_mtime))
+        # Sort by mtime (item[6] is the raw timestamp we'll add)
+        # item format: (name, version, date_str, full_path, type, has_symbol, raw_mtime)
+        self.cached_items.sort(key=lambda x: x[6], reverse=True)
         self.update_tree_view()
+        
+        # Auto-select the first item (newest)
+        children = self.driver_list.get_children()
+        if children:
+            self.driver_list.selection_set(children[0])
+            self.driver_list.see(children[0])
+            self.on_driver_select(None)
 
     def on_driver_select(self, event):
         """ Handle driver version selection """
@@ -357,6 +425,11 @@ class ProjectTab(ttk.Frame):
             shutil.rmtree(dest)
         try:
             shutil.copytree(src, dest)
+            # Update the destination folder's mtime to 'now' so it's truly the newest
+            try:
+                os.utime(dest, None)
+            except: pass
+            
             messagebox.showinfo("Success", f"Backed up: {os.path.basename(dest)}")
             self.refresh_driver_list()
         except Exception as e: messagebox.showerror("Error", str(e))
