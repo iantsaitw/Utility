@@ -12,6 +12,16 @@ set TAG_NAME=%TAG_PREFIX%%NEW_VER%
 echo Target Version: %NEW_VER%
 echo Tag Name: %TAG_NAME%
 
+:: README Check Prompt
+echo.
+set /p CONFIRM_README="[?] Have you updated README.md for this release? (Y/N): "
+if /i "%CONFIRM_README%" neq "Y" (
+    echo.
+    echo [!] Release aborted. Please update README.md first.
+    pause
+    exit /b 1
+)
+
 :: Check if Tag already exists
 git rev-parse %TAG_NAME% >nul 2>&1
 if %ERRORLEVEL% equ 0 (
