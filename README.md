@@ -5,8 +5,6 @@
 [![Master Build](https://img.shields.io/github/last-commit/iantsaitw/Utility?style=for-the-badge&color=orange)](https://github.com/iantsaitw/Utility/commits/master)
 [![Status](https://img.shields.io/badge/Status-Production--Ready-success?style=for-the-badge)](./GEMINI.md)
 
-This suite bridges the gap between legacy command-line debugging and modern GUI workflows, providing Realtek engineers with a consistent, stable, and visually immersive toolkit.
-
 ---
 
 ## 🎯 Which tool do I need?
@@ -45,10 +43,10 @@ graph TD
 ---
 
 ## 💎 Design Philosophy
-- **Zero-Installation**: All tools are distributed as standalone, portable executables.
-- **Fluent Experience**: Unified Win11 Dark/Light mode support via the `sv-ttk` engine.
-- **High Performance**: Native Win32 API integration for zero-latency terminal and process handling.
-- **DPI Aware**: Pixel-perfect scaling for modern 4K monitor setups.
+- **Zero-Installation**: Standalone, portable executables.
+- **Fluent Experience**: Unified Win11 Dark/Light mode via `sv-ttk`.
+- **High Performance**: Native Win32 API integration.
+- **DPI Aware**: Optimized for modern high-resolution displays.
 
 ---
 
@@ -59,20 +57,16 @@ Utility/
 ├── 🧶 ETL Weaver/       # High-speed diagnostic trace analysis engine
 ├── GEMINI.md            # Master status record and global release workflow
 ├── README.md            # Suite entrance and project matrix (this file)
-└── .gitignore           # Global protection against build artifact leakage
+└── .gitignore           # Global exclude rules
 ```
 
 ---
 
-## 🛠️ Global Prerequisites
-- **OS**: Windows 10/11 (x64)
-- **Environment**: Python 3.10+ (for source) or VS 2022 (for terminal/build).
-- **Core Stack**: `Tkinter`, `sv-ttk`, `Win32 API`, `gh-cli`.
-
----
-
-## 🤝 Support & Release
-To release a new version, follow the **[Standardized Workflow](./GEMINI.md)**. For bug reports, use internal GitHub Issues.
+## 👨‍💻 Release Workflow
+To deploy a new version:
+1. **Commit** functional changes.
+2. **Bump** version in `VERSION` file.
+3. **Run** `scripts/release.bat`.
 
 ---
 *Internal Engineering Toolset - Realtek Semiconductor Corp.*
