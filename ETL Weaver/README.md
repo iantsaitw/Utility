@@ -80,9 +80,11 @@ ETL Weaver/
 | Key | Description | Default |
 | :--- | :--- | :--- |
 | `theme` | UI color scheme: `dark` or `light`. | `dark` |
-| `pdb_path` | Default folder to search for symbol files. | `C:\` |
-| `ui_font_size` | Size of labels and button text. | `10` |
-| `log_font_size` | Size of the text in the execution log window. | `10` |
+| `pdb_path` | Default folder to search for symbol (.pdb) files. | `C:\` |
+| `ui_font_family`| Font face for labels, buttons, and menus. | `Segoe UI` |
+| `ui_font_size` | Global font size for the user interface. | `10` |
+| `log_font_family`| Font face for the command execution log window. | `Consolas` |
+| `log_font_size` | Font size for the log content. | `10` |
 
 ---
 

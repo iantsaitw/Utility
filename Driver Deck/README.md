@@ -87,11 +87,17 @@ Driver Deck/
 
 | Key | Description | Default |
 | :--- | :--- | :--- |
-| `root_dir` | The base path where your driver projects are located. | `E:\Project` |
-| `theme_mode` | Application appearance: `Dark` or `Light`. | `Dark` |
-| `symbol_filter` | Startup filter state: `All`, `Symbol`, or `No Symbol`. | `All` |
-| `pfx_path` | Path to your digital certificate for signing. | `""` |
-| `font_family` | Global UI font face. | `Segoe UI` |
+| `root_dir` | The base path where driver projects are scanned. | `E:\Project` |
+| `export_dir` | The target folder for exporting `.sys` and packages. | `""` |
+| `theme_mode` | Visual appearance: `Dark` or `Light`. | `Dark` |
+| `accent_color` | Highlight color for buttons and headings (Hex). | `#4db6ac` |
+| `pfx_path` | Absolute path to your `.pfx` digital certificate. | `""` |
+| `signtool_path`| Path to `signtool.exe` (Auto-detected if empty). | `""` |
+| `filter_mode` | Interface filter state: `All`, `PCIE`, or `USB`. | `All` |
+| `symbol_filter`| Symbol filter state: `All`, `Symbol`, or `No Symbol`. | `All` |
+| `split_ratio` | The ratio of the PanedWindow splitter (0.1 to 0.9). | `0.6` |
+| `font_family` | Global UI font face used across the application. | `Segoe UI` |
+| `last_tab` | Automatically stores the last visited project tab. | `""` |
 
 ---
 
