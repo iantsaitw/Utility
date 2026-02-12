@@ -24,6 +24,7 @@ echo [4/4] Building Single EXE...
 python -m PyInstaller --noconfirm --onefile --windowed --noupx --name "%A_NAME%" ^
     --icon="icon.ico" ^
     --add-data "icon.ico;." ^
+    --add-data "VERSION;." ^
     "main.py"
 
 if %errorlevel% equ 0 (

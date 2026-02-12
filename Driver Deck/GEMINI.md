@@ -3,9 +3,9 @@
 ## 1. Project Overview
 A professional GUI tool for Windows Driver management and build operations.
 
-## 2. Current Version: v1.1.0
+## 2. Current Version: v1.2.0
 **Status:** Stable / UX Optimized
-**Last Updated:** 2026-02-11
+**Last Updated:** 2026-02-12
 
 ### 🚀 Key Features
 - **Project Tree**: Automatic scanning of PCIE/USB driver projects.

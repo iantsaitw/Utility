@@ -12,7 +12,7 @@ A centralized suite for Windows internal tools featuring a unified release, docu
 ## 3. Current Project Matrix
 | Project | Version | Status | Highlights |
 | :--- | :--- | :--- | :--- |
-| **Driver Deck** | v1.1.0 | Stable | Terminal Focus Fix, WT Integration |
+| **Driver Deck** | v1.2.0 | Stable | Focus Recovery, WT Integration, Suffix Logic |
 | **ETL Weaver** | v1.0.0 | Stable | Postfix Rename, Refactored UI |
 
 ---

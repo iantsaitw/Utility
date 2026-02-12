@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+from utils import resource_path
 
 # Application Info
 APP_NAME = "ETLWeaver"
@@ -9,7 +10,7 @@ SHOW_SYSTEM_INFO = True
 
 # Read version from VERSION file
 try:
-    with open(os.path.join(os.path.dirname(__file__), "VERSION"), "r") as f:
+    with open(resource_path("VERSION"), "r") as f:
         APP_VERSION = f.read().strip()
 except Exception:
     APP_VERSION = "1.0.0"

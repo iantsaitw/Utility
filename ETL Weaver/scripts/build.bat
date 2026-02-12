@@ -26,6 +26,7 @@ echo [4/4] Building Single EXE...
 python -m PyInstaller --noconfirm --onefile --windowed --noupx --name "%A_NAME%" ^
     --icon="icon.ico" ^
     --add-data "icon.ico;." ^
+    --add-data "VERSION;." ^
     --add-data "trace_tools;trace_tools" ^
     --add-data "%TK_PATH%;tkinterdnd2" ^
     --hidden-import "tkinterdnd2" ^
