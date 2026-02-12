@@ -1,3 +1,18 @@
+﻿## [1.1.0] - 2026-02-12
+### Added
+- **Postfix Support**: Added Postfix field to specify custom suffixes for converted and split files.
+- **Rename TXT**: New dedicated button to immediately apply postfix to the loaded TXT file.
+- **Side-by-Side UI**: Refactored the TXT Setting panel into a more ergonomic two-column layout.
+
+### Fixed
+- **Critical ImportError**: Resolved config.py issues that prevented the application from launching.
+- **Class Structure**: Repaired UI window method nesting and indentation for improved stability.
+- **Settings Dialog**: Improved centering, icon support, and fixed the PDB path entry field layout.
+- **Version Bundling**: VERSION file is now correctly embedded in the EXE for accurate UI display.
+
+### Changed
+- **Asset Naming**: Standardized executable name to ETLWeaver.exe (no spaces/dots).
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -11,3 +26,4 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Asset Naming**: Standardized executable name to `ETLWeaver.exe` (aligned with Driver Deck).
+
