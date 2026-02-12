@@ -6,20 +6,21 @@ A centralized suite for Windows internal tools featuring a unified release, docu
 ## 2. Global Release Workflow (Standardized)
 Every project follows this automated "Safety-First" lifecycle via `scripts/release.bat`:
 1.  **Version Detection**: Reads from the local `VERSION` file.
-2.  **Safety Check (Abort-on-Exists)**: If the Git Tag already exists, the release aborts to prevent overwriting history.
-3.  **Mandatory Build Test**: Automatically executes `scripts/build.bat`. Must pass to proceed.
-4.  **Local Archiving**: Backs up the binary to `release/<Tag_Name>/<Name>.exe`. (Ignored by Git).
-5.  **Automated Changelog**: Extracts Git logs since the last tag and prepends to `CHANGELOG.md`.
-6.  **Git Synchronization**: Handles `chore(release)` commit, tagging, and pushing to origin master.
-7.  **GitHub Publication**: Uses `gh` CLI to create a release and upload assets.
-8.  **Editorial Rule (AI README Audit)**: During every release, Gemini AI must scan the source code and README.md. If descriptions, feature lists, or folder structures are outdated, the AI must automatically correct them before the final commit.
-9.  **Log Refinement**: Gemini AI is responsible for "Humanizing" logs into `### Added/Fixed` categories.
+2.  **README Audit (AI Rule)**: Gemini AI must scan source code for new features/settings and synchronize `README.md` before proceeding.
+3.  **Safety Check**: If the Git Tag already exists, the release aborts.
+4.  **Mandatory Build Test**: Automatically executes `scripts/build.bat`.
+5.  **Local Archiving**: Backs up the binary to `release/<Tag_Name>/<Name>.exe`. (Ignored by Git).
+6.  **Automated Changelog**: Extracts Git logs and prepends to `CHANGELOG.md`.
+7.  **Git Synchronization**: Handles `chore(release)` commit, tagging, and pushing.
+8.  **GitHub Publication**: Uses `gh` CLI to create a release and upload assets.
+9.  **Editorial Rule**: Gemini AI humanizes logs into `### Added/Fixed` categories.
 
-## 3. Engineering Standards
-- **Binary Naming**: Standardized `ProjectName.exe` (no spaces, no dots).
-- **Frozen Versioning**: All tools must bundle `VERSION` into the EXE and use `utils.resource_path` for accurate UI display.
-- **Build Flags**: PyInstaller must use `--noupx` and `--noconfirm` for stability on Windows 11.
-- **DPI awareness**: Mandatory High DPI awareness and Win11 immersive dark mode.
+## 3. Engineering Standards & Best Practices
+- **Executable Naming**: Use `ProjectName.exe` (Strictly NO spaces or dots in filenames).
+- **Build Stability**: PyInstaller must use `--noupx` and `--noconfirm` to avoid Windows Defender locking issues on Win11.
+- **Focus Recovery (Win32)**: When embedding child windows (like CMD), implement a global click listener using `SetForegroundWindow` and `SetFocus` to prevent keyboard focus lockups.
+- **Frozen Versioning**: Bundle `VERSION` file as data and use `utils.resource_path` to ensure UI accuracy in compiled binaries.
+- **Modern UI**: Mandatory High DPI awareness and Win11 immersive dark mode support.
 
 ## 4. Current Project Matrix
 | Project | Version | Status | Highlights |
