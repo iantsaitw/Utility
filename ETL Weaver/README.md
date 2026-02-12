@@ -10,7 +10,12 @@
 ---
 
 ## 📸 Visual Showcase
-*(Manual Action: Showcase the conversion feedback and the side-by-side settings panel)*
+
+| ETL Conversion | TXT Settings & Splitting |
+| :---: | :---: |
+| ![Main UI](./docs/main_ui.png) | ![Settings UI](./docs/settings_ui.png) |
+
+> *Tip: Refer to [docs/README.md](./docs/README.md) for media contribution guidelines.*
 
 ---
 
