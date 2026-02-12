@@ -39,7 +39,7 @@ Unlike standard text-based terminals, Driver Deck implements low-level **Win32 w
 ## 🚀 Quick Start
 
 ### For Users (Binary)
-1. Download the latest `Driver Deck.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
+1. Download the latest `DriverDeck.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
 2. Run as Administrator for terminal features.
 
 ### For Developers (Source)

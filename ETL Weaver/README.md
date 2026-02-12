@@ -39,7 +39,7 @@
 ## 🛠️ Setup
 
 ### For Users (Binary)
-1. Download the latest `ETL Weaver.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
+1. Download the latest `ETLWeaver.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
 2. Ensure you have the necessary PDB files for symbol resolution.
 
 ### For Developers (Source)
