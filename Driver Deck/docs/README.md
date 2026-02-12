@@ -1,13 +1,11 @@
-﻿# 📸 Media Assets & Screenshots
+# 📸 Media Assets & Screenshots
 
-To maintain consistency in the main README, please follow these naming conventions for screenshots:
+To maintain consistency in the main README, please follow this naming convention for screenshots:
 
-### 🖼️ Standard Filenames
-- main_ui.png: The primary application dashboard.
-- settings_ui.png: The settings/configuration dialog.
-- 	erminal_focus.png: Demonstration of the embedded terminal.
+### 🖼️ Standard Filename
+- `main_ui.png`: The primary application dashboard.
 
 ### 📝 Guidelines
-- **Format**: Preferred .png for crisp UI text.
+- **Format**: Preferred `.png` for crisp UI text.
 - **Resolution**: High DPI (Scale 100% or 125%) is recommended.
-- **Update**: Always replace existing files with the same name to sync with README links.
+- **Update**: Always replace the existing file with the same name to sync with README links.
