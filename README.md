@@ -1,52 +1,78 @@
 # 🛠️ Windows Utility Suite
-> A premium collection of high-performance internal tools for Windows Driver development and system analysis.
+> **Efficiency through Automation.** A premium collection of high-performance internal tools engineered for Windows Driver development, system debugging, and ETL log analysis.
 
 [![License](https://img.shields.io/badge/License-Internal-blue.svg?style=for-the-badge)](https://github.com/iantsaitw/Utility)
 [![Master Build](https://img.shields.io/github/last-commit/iantsaitw/Utility?style=for-the-badge&color=orange)](https://github.com/iantsaitw/Utility/commits/master)
-[![Platform](https://img.shields.io/badge/Platform-Win10%20%7C%20Win11-0078d4?style=for-the-badge&logo=windows)](https://www.microsoft.com/windows)
+[![Status](https://img.shields.io/badge/Status-Production--Ready-success?style=for-the-badge)](./GEMINI.md)
 
-This repository serves as a centralized hub for engineering utilities designed to bridge the gap between legacy kernel debugging and modern GUI workflows. Every tool is built with a focus on **stability, speed, and immersive UX**.
+This suite bridges the gap between legacy command-line debugging and modern GUI workflows, providing Realtek engineers with a consistent, stable, and visually immersive toolkit.
+
+---
+
+## 🎯 Which tool do I need?
+
+| If you want to... | Use this Tool | Key Feature |
+| :--- | :--- | :--- |
+| Manage Driver Lifecycle | [**🚢 Driver Deck**](./Driver%20Deck) | Win32 Embedded Terminal & One-click Signing |
+| Analyze Trace Logs | [**🧶 ETL Weaver**](./ETL%20Weaver) | Stable `traceview` Engine & TXT Splitting |
+| Build Multi-project | [**Standardized Scripts**](./GEMINI.md) | Unified `release.bat` & `build.bat` workflow |
 
 ---
 
 ## 🚀 Project Matrix
 
-| Tool | Capability | Latest Release | Download | History |
-| :--- | :--- | :--- | :--- | :--- |
-| [**🚢 Driver Deck**](./Driver%20Deck) | Professional Driver Lifecycle Management | [![v1.2.1](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=v1.2.1&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Log](./Driver%20Deck/CHANGELOG.md) |
-| [**🧶 ETL Weaver**](./ETL%20Weaver) | High-Speed ETL Analysis & Splitting | [![v1.1.0](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=v1.1.0&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Log](./ETL%20Weaver/CHANGELOG.md) |
+| Tool | Version | Direct Download | History |
+| :--- | :--- | :--- | :--- |
+| **Driver Deck** | [![v1.2.1](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=v1.2.1&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./Driver%20Deck/CHANGELOG.md) |
+| **ETL Weaver** | [![v1.1.0](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=v1.1.0&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./ETL%20Weaver/CHANGELOG.md) |
+
+---
+
+## 🏗️ Automation Architecture
+Every project in this suite adheres to a unified CI/CD-inspired local release pipeline:
+
+```mermaid
+graph TD
+    A[Manual: Update VERSION] --> B[Run: release.bat];
+    B --> C{Mandatory Build};
+    C -->|Fail| D[Abort & Fix];
+    C -->|Pass| E[Local Archive];
+    E --> F[Auto-generate Changelog];
+    F --> G[Git Sync & Tagging];
+    G --> H[GitHub Release Publication];
+```
+
+---
+
+## 💎 Design Philosophy
+- **Zero-Installation**: All tools are distributed as standalone, portable executables.
+- **Fluent Experience**: Unified Win11 Dark/Light mode support via the `sv-ttk` engine.
+- **High Performance**: Native Win32 API integration for zero-latency terminal and process handling.
+- **DPI Aware**: Pixel-perfect scaling for modern 4K monitor setups.
 
 ---
 
 ## 📂 Repository Anatomy
-
 ```text
 Utility/
 ├── 🚢 Driver Deck/      # Flagship Driver management and build system
 ├── 🧶 ETL Weaver/       # High-speed diagnostic trace analysis engine
-├── .gitignore           # Global exclude rules for build artifacts and backups
 ├── GEMINI.md            # Master status record and global release workflow
-└── README.md            # Suite entrance and project matrix (this file)
+├── README.md            # Suite entrance and project matrix (this file)
+└── .gitignore           # Global protection against build artifact leakage
 ```
 
-## 🏗️ Architecture & Standards
+---
 
-- **[Unified Release System](./GEMINI.md)**: Standardized `release.bat` ensures 100% binary integrity and automated documentation.
-- **Modern UI Architecture**: Built with `sv-ttk` for a native Windows 11 Fluent Design experience.
-- **Industrial Stability**: Includes advanced Win32 focus management and high-process-priority execution.
+## 🛠️ Global Prerequisites
+- **OS**: Windows 10/11 (x64)
+- **Environment**: Python 3.10+ (for source) or VS 2022 (for terminal/build).
+- **Core Stack**: `Tkinter`, `sv-ttk`, `Win32 API`, `gh-cli`.
 
 ---
 
-## 👨‍💻 Release Workflow
-To deploy a new version:
-1. **Commit** your functional changes to Git.
-2. **Bump** the version string in the project's `VERSION` file (e.g., `1.2.1` -> `1.2.2`).
-3. **Run** `scripts/release.bat`.
-4. The system handles **Build -> Local Archive -> Git Tag -> Push -> GitHub Release** automatically.
-
----
-## 🤝 Support & Contribution
-For bug reports or feature requests, please use the [GitHub Issues](https://github.com/iantsaitw/Utility/issues) or contact the internal tool team.
+## 🤝 Support & Release
+To release a new version, follow the **[Standardized Workflow](./GEMINI.md)**. For bug reports, use internal GitHub Issues.
 
 ---
 *Internal Engineering Toolset - Realtek Semiconductor Corp.*
