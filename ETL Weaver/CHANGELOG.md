@@ -1,4 +1,12 @@
-﻿## [1.1.0] - 2026-02-12
+﻿## [1.1.1] - 2026-02-12
+### Fixed
+- **UI Consistency**: Replaced legacy scrollbars in the Execution Log with modern themed ttk.Scrollbars for a unified look.
+- **Admin Limitations**: Verified stability across various privilege levels.
+
+### Added
+- **Visual Assets**: Included the initial application screenshots in the project documentation.
+
+## [1.1.0] - 2026-02-12
 ### Added
 - **Postfix Support**: Added Postfix field to specify custom suffixes for converted and split files.
 - **Rename TXT**: New dedicated button to immediately apply postfix to the loaded TXT file.
@@ -26,4 +34,5 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Asset Naming**: Standardized executable name to `ETLWeaver.exe` (aligned with Driver Deck).
+
 
