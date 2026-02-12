@@ -11,9 +11,7 @@
 
 ## 📸 Visual Showcase
 
-| Main Dashboard | Settings & Config |
-| :---: | :---: |
-| ![Main UI](./docs/main_ui.png) | ![Settings UI](./docs/settings_ui.png) |
+![Main UI](./docs/main_ui.png)
 
 > *Tip: Refer to [docs/README.md](./docs/README.md) for media contribution guidelines.*
 

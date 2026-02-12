@@ -11,9 +11,7 @@
 
 ## 📸 Visual Showcase
 
-| ETL Conversion | TXT Settings & Splitting |
-| :---: | :---: |
-| ![Main UI](./docs/main_ui.png) | ![Settings UI](./docs/settings_ui.png) |
+![Main UI](./docs/main_ui.png)
 
 > *Tip: Refer to [docs/README.md](./docs/README.md) for media contribution guidelines.*
 
@@ -102,4 +100,4 @@ ETL Weaver/
 | **Import Error** | Run `scripts/build.bat` to ensure all config constants are bundled. |
 
 ---
-*Status: Production Ready | v1.1.0*
+*Status: Production Ready | v1.1.1*
