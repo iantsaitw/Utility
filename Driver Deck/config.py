@@ -4,8 +4,15 @@ import sys
 
 # App Information
 APP_NAME = "Driver Deck"
-APP_VERSION = "v5.3.2"
-APP_ID = f"mycompany.tools.{APP_NAME.replace(' ', '').lower()}.v5_3"
+
+# Read version from VERSION file
+try:
+    with open(os.path.join(os.path.dirname(__file__), "VERSION"), "r") as f:
+        APP_VERSION = f.read().strip()
+except Exception:
+    APP_VERSION = "1.0.0"
+
+APP_ID = f"mycompany.tools.{APP_NAME.replace(' ', '').lower()}.v{APP_VERSION.replace('.', '_')}"
 
 # Get executable directory (compatible with dev and frozen EXE)
 if getattr(sys, 'frozen', False):
