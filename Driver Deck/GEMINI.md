@@ -1,28 +1,28 @@
 # Driver Deck - Project Status Record
 
-## Project Overview
-Driver Deck is a GUI tool specifically designed for managing and building Windows drivers, built with Python, Tkinter, and sv-ttk.
+## 1. Project Overview
+A professional GUI tool for Windows Driver management and build operations.
 
-## Current Version: v1.1.0 (Terminal Focus & UI Optimization)
+## 2. Current Version: v1.1.0
+**Status:** Stable / UX Optimized
 **Last Updated:** 2026-02-11
 
-### 1. Key Updates & Stability Fixes
-- **Global Focus Recovery (Critical Fix)**: Solved the issue where the embedded terminal would "lock" the keyboard input. 
-    - *Mechanism*: Implemented a global `<Button-1>` listener in the main app. Clicking any non-terminal widget triggers Win32 `SetForegroundWindow` and `SetFocus`, forcefully breaking the CMD thread's input hook and returning control to Python.
-- **Modern Terminal (WT Integration)**: Forced the use of Windows Terminal (`wt.exe`) via `subprocess.Popen` (list-based) to ensure full ANSI color support and modern font rendering even in Administrator mode.
-- **Smart Suffix Refresh**: Backup suffix now auto-updates the date/time portion during "Refresh List" using regex (`^(_\d{8}_\d{4})(.*)$`), while preserving any custom text manually appended by the user.
-- **Backup Sorting Logic**: Applied `os.utime(dest, None)` after backup to ensure the new folder is timestamped as 'now', causing it to correctly appear at the top of the list.
-- **Symbol Filtering**: Added "All / Symbol / No Symbol" buttons with state persistence in `settings.json`.
+### 🚀 Key Features
+- **Project Tree**: Automatic scanning of PCIE/USB driver projects.
+- **Modern Terminal**: Embedded Windows Terminal (WT) with full ANSI color support.
+- **Smart Management**: Automated backup with timestamping and symbol filtering (All/Symbol/No Symbol).
+- **One-Click Signing**: Digital signature integration via SignTool.
 
-### 2. UI Layout & UX
-- **Header Alignment**: Removed redundant titles. The "Restart" button is now a discreet overlay at the bottom-right of the terminal.
-- **Visual Consistency**: Terminal top edge is now perfectly aligned with the left-hand project tree.
-- **Build System**: Aligned `build.bat` with ETL Weaver (added `--noupx` and dynamic name detection) to bypass Windows Defender file-locking warnings on Windows 11.
+### 🛠️ Technical Implementation (Modular Fixes)
+- **Focus Lock Resolution**: Uses a global Win32 click listener (`SetForegroundWindow` & `SetFocus`) to break terminal focus and return keyboard control to Python UI.
+- **Terminal Integration**: Forced `wt.exe` via list-based `subprocess.Popen` to solve quoting issues with paths containing spaces (e.g., `C:\Program Files`).
+- **Filesystem Hooks**: Applied `os.utime` post-backup to force directory sorting priority.
+- **Regex Logic**: Suffix auto-refresh uses `^(_\d{8}_\d{4})(.*)$` to selectively update time while preserving manual text.
 
-### 3. Standardized Release Process (release.bat)
-1. **Build Integrity**: Mandatory `build.bat` check.
-2. **Humanized Logging**: Opens Notepad for manual log refinement.
-3. **Automated Deployment**: One-click Git sync and GitHub Release.
+## 3. Standardized Release Process
+1. **Validation**: Mandatory `build.bat` check (Aligned with ETL Weaver, includes `--noupx`).
+2. **Changelog**: Manual Notepad editing of Git logs before publish.
+3. **Deployment**: Automated tagging and GitHub Release upload.
 
 ---
-*Status: Stable, UX Optimized & Focus issues resolved.*
+*Status: Finalized and Stable.*

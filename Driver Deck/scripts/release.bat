@@ -21,6 +21,12 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
+:: Local Release Archiving
+echo [2.5/6] Archiving to local release folder...
+set RELEASE_DIR=release\%TAG_NAME%
+if not exist "%RELEASE_DIR%" mkdir "%RELEASE_DIR%"
+copy /y "dist\DriverDeck.exe" "%RELEASE_DIR%\"
+
 echo [3/6] Extracting logs and updating files...
 set LOG_FILE=release_logs.tmp
 set LAST_TAG=

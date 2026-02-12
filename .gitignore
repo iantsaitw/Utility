@@ -41,6 +41,7 @@ ENV/
 Thumbs.db
 
 # === Shared Utility Ignores ===
+release/
 settings.json
 *.log
 *.7z
