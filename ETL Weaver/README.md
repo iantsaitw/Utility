@@ -26,6 +26,10 @@
 - **Instant Rename**: Apply postfix renaming to existing logs with one click.
 - **Precision Splitting**: Split massive TXT files into manageable chunks.
 
+### 🎨 Seamless UX
+- **Centered Dialogs**: Settings windows are perfectly centered and icon-branded.
+- **Dynamic Theming**: Windows 11 Dark/Light mode support.
+
 ---
 
 ## 🚀 Quick Start
@@ -59,6 +63,7 @@ ETL Weaver/
 ├── trace_tools/         # Bundled verified MS trace binaries (TraceView, TraceFmt)
 ├── dist/                # Production binaries (ETLWeaver.exe)
 ├── release/             # Local versioned archives (Git ignored)
+├── docs/                # Feature screenshots and UI analysis
 ├── main.py              # Application entry point
 ├── ui_main_window.py    # Win11 Fluent UI and logic orchestration
 ├── core_logic.py        # Conversion, Splitting, and Renaming algorithms

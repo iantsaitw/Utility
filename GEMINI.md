@@ -12,7 +12,8 @@ Every project follows this automated "Safety-First" lifecycle via `scripts/relea
 5.  **Automated Changelog**: Extracts Git logs since the last tag and prepends to `CHANGELOG.md`.
 6.  **Git Synchronization**: Handles `chore(release)` commit, tagging, and pushing to origin master.
 7.  **GitHub Publication**: Uses `gh` CLI to create a release and upload assets.
-8.  **Editorial Rule**: Gemini AI is responsible for "Humanizing" logs into `### Added/Fixed` categories during the process.
+8.  **Editorial Rule (AI README Audit)**: During every release, Gemini AI must scan the source code and README.md. If descriptions, feature lists, or folder structures are outdated, the AI must automatically correct them before the final commit.
+9.  **Log Refinement**: Gemini AI is responsible for "Humanizing" logs into `### Added/Fixed` categories.
 
 ## 3. Engineering Standards
 - **Binary Naming**: Standardized `ProjectName.exe` (no spaces, no dots).

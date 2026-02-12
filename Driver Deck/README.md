@@ -24,7 +24,11 @@
 ### 🏗️ Build & Environment
 - **Project Intelligence**: Auto-scans and categorizes PCIE/USB driver trees.
 - **One-Click Signing**: Seamless integration with `signtool.exe` and PFX management.
-- **Smart Suffix**: Auto-updating timestamps while preserving manual notes.
+- **Symbol Isolation**: Filter view by All, Symbol, or No Symbol with persistent memory.
+
+### 📦 Safe Archiving
+- **Atomic Backups**: Instant source archival with smart timestamping.
+- **Smart Sorting**: Backups are automatically timestamped as "now" (`os.utime`) to ensure they appear at the top of your list for immediate export.
 
 ---
 
@@ -66,6 +70,7 @@ Driver Deck/
 ├── scripts/             # Automation hub (build.bat, release.bat)
 ├── dist/                # Production binaries (DriverDeck.exe)
 ├── release/             # Local versioned archives (Git ignored)
+├── docs/                # Screenshots and technical documentation
 ├── main.py              # Application entry and window orchestration
 ├── terminal_widget.py   # Low-level Win32 window embedding & focus logic
 ├── project_tab.py       # Driver lifecycle logic and UI tab management
