@@ -12,6 +12,16 @@ set TAG_NAME=%TAG_PREFIX%%NEW_VER%
 echo Target Version: %NEW_VER%
 echo Tag Name: %TAG_NAME%
 
+:: Check if Tag already exists
+git rev-parse %TAG_NAME% >nul 2>&1
+if %ERRORLEVEL% equ 0 (
+    echo.
+    echo [!] ERROR: Tag %TAG_NAME% already exists.
+    echo     Please bump the version in 'VERSION' file before releasing.
+    pause
+    exit /b 1
+)
+
 echo [2/6] Executing Build Test...
 call scripts\build.bat
 if %ERRORLEVEL% neq 0 (
