@@ -1,64 +1,49 @@
 # 🧶 ETL Weaver
+> High-precision diagnostic engine for Windows Event Trace Log analysis.
 
-[![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases)
-[![License](https://img.shields.io/badge/License-Internal-blue.svg)](https://github.com/iantsaitw/Utility)
-[![Download](https://img.shields.io/badge/Download-EXE-orange.svg)](https://github.com/iantsaitw/Utility/releases)
+[![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=stable&color=green&style=for-the-badge)](https://github.com/iantsaitw/Utility/releases)
+[![Core](https://img.shields.io/badge/Engine-TraceView%20Stable-blue?style=for-the-badge)](./trace_tools/)
+[![Feature](https://img.shields.io/badge/New-Postfix%20Support-orange?style=for-the-badge)](./CHANGELOG.md)
 
-**ETL Weaver** is a specialized diagnostic utility designed to transform raw Windows Event Trace Logs (ETL) into human-readable analysis. It focuses on data integrity, high-speed conversion, and a modern user experience.
+**ETL Weaver** is a high-speed diagnostic utility designed to transform raw ETL traces into structured analysis. It focuses on data integrity, bypassing common truncation bugs found in modern tools.
 
 ---
 
 ## 💎 Features
 
-### 🛡️ Rock-Solid Reliability
-- **Legacy Stability**: Bundles a verified version of `traceview.exe` to bypass truncation and encoding bugs found in newer WDK versions.
-- **Drag & Drop Integration**: Intuitive file loading via `tkinterdnd2` for ETL and PDB files.
-- **Hybrid Engine**: Supports both stable legacy conversion and high-speed modern `tracefmt.exe` (WDK 2025) workflows.
+### 🛡️ Legacy Stability, Modern Power
+- **Reliable Core**: Bundles verified Microsoft `traceview.exe` to ensure zero data loss.
+- **Drag & Drop**: Native integration for lightning-fast ETL and PDB loading.
+- **High Priority**: Executes conversion tasks with elevated process priority.
 
-### 🎨 Modern Analytical UI
-- **Live Theming**: Instant switching between Dark and Light modes using the `sv-ttk` engine.
-- **High-Performance Backend**: Conversion tasks are executed with **High Process Priority** to ensure speed for large logs.
-- **Personalized Workspace**: Persistent configuration for typography and default PDB symbol paths.
-- **Thread-Safe Logging**: Real-time conversion feedback without UI freezing.
+### 📝 Smart TXT Management
+- **Postfix Engine**: Add custom suffixes to outputs automatically.
+- **Instant Rename**: Dedicated logic to apply postfix renaming to existing logs.
+- **Dual-Column Settings**: Balanced UI for fine-grained splitting control.
 
-### ⚡ Performance Optimized
-- **Process Elevation**: Automatically executes conversion tasks with high process priority.
-- **Streamlined Workflow**: Minimizes manual steps from raw trace to formatted log.
-
----
-
-## 📂 Project Architecture
-
-- `ui_main_window.py`: Orchestrates the complex UI state and event loop.
-- `core_logic.py`: Manages the lifecycle of external WDK tool processes.
-- `trace_tools/`: A curated collection of stable and experimental Microsoft trace utilities.
-- `config.py`: JSON-based settings management with live-apply capabilities.
+### 🎨 Design & Experience
+- **Dynamic Theming**: Windows 11 Dark/Light mode support.
+- **Persistent Memory**: Saves your font preferences and symbol paths.
 
 ---
 
-## 🛠️ Setup
+## 🚀 Quick Start
 
-### For Users (Binary)
-1. Download the latest `ETLWeaver.exe` from [Releases](https://github.com/iantsaitw/Utility/releases).
-2. Ensure you have the necessary PDB files for symbol resolution.
+### 📦 For Users (Portable EXE)
+1. Download `ETLWeaver.exe` from [Latest Releases](https://github.com/iantsaitw/Utility/releases).
+2. Load your **ETL** and corresponding **PDB** files.
+3. Click **Convert** to generate analyzed output.
 
-### For Developers (Source)
-1. **Environment**: Ensure Python 3.10+ is installed.
-2. **Library**:
-   ```powershell
-   pip install sv-ttk tkinterdnd2 psutil
-   ```
-3. **Build Binary**:
-   Run `scripts/build.bat` for a production-ready executable.
-4. **Run**:
-   ```powershell
-   python main.py
-   ```
+### ⌨️ For Developers (Source)
+```powershell
+pip install sv-ttk tkinterdnd2 psutil
+python main.py
+```
 
 ---
 
-## 📜 Version History
-Detailed version history and changes are documented in [CHANGELOG.md](./CHANGELOG.md).
+## 📜 Roadmap & History
+View the complete history of feature additions in [CHANGELOG.md](./CHANGELOG.md).
 
 ---
-*License: Internal Tool - Realtek Semiconductor Corp.*
+*Status: Production Ready | v1.1.0*

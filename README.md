@@ -1,46 +1,43 @@
 # 🛠️ Windows Utility Suite
+> A premium collection of high-performance internal tools for Windows Driver development and system analysis.
 
-[![License](https://img.shields.io/badge/License-Internal-blue.svg)](https://github.com/iantsaitw/Utility)
-[![Last Commit](https://img.shields.io/github/last-commit/iantsaitw/Utility)](https://github.com/iantsaitw/Utility/commits/master)
+[![License](https://img.shields.io/badge/License-Internal-blue.svg?style=for-the-badge)](https://github.com/iantsaitw/Utility)
+[![Master Build](https://img.shields.io/github/last-commit/iantsaitw/Utility?style=for-the-badge&color=orange)](https://github.com/iantsaitw/Utility/commits/master)
+[![Platform](https://img.shields.io/badge/Platform-Win10%20%7C%20Win11-0078d4?style=for-the-badge&logo=windows)](https://www.microsoft.com/windows)
 
-A curated collection of high-performance internal tools engineered for Windows driver development, system debugging, and ETL log analysis. This suite bridges legacy command-line utilities with modern, efficient GUI workflows.
+This repository serves as a centralized hub for engineering utilities designed to bridge the gap between legacy kernel debugging and modern GUI workflows. Every tool is built with a focus on **stability, speed, and immersive UX**.
 
 ---
 
 ## 🚀 Project Matrix
 
-| Tool Name | Purpose | Latest Version | Direct Download | History |
+| Tool | Capability | Latest Release | Download | History |
 | :--- | :--- | :--- | :--- | :--- |
-| [**Driver Deck**](./Driver%20Deck) | Professional Driver Management & Build System | [![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases) | [📦 Download](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./Driver%20Deck/CHANGELOG.md) |
-| [**ETL Weaver**](./ETL%20Weaver) | Modern ETL Analysis & Conversion Engine | [![Version](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=version&color=green)](https://github.com/iantsaitw/Utility/releases) | [📦 Download](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./ETL%20Weaver/CHANGELOG.md) |
+| [**🚢 Driver Deck**](./Driver%20Deck) | Professional Driver Lifecycle Management | [![v1.2.1](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=v1.2.1&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Log](./Driver%20Deck/CHANGELOG.md) |
+| [**🧶 ETL Weaver**](./ETL%20Weaver) | High-Speed ETL Analysis & Splitting | [![v1.1.0](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=v1.1.0&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Log](./ETL%20Weaver/CHANGELOG.md) |
 
 ---
 
-## 🏗️ Architecture & Standards
+## 💎 Infrastructure Standards
 
-- **[Master Release System](./GEMINI.md)**: Every project follows a "Safety-First" automated release workflow via `release.bat`.
-- **Integrated Tooling**: Seamlessly bundles essential WDK and debugging utilities.
-- **Modern UI/UX**: All tools feature Windows 11 immersive design and DPI awareness.
+- **[Unified Release System](./GEMINI.md)**: Standardized `release.bat` ensures 100% binary integrity and automated documentation.
+- **Modern UI Architecture**: Built with `sv-ttk` for a native Windows 11 Fluent Design experience.
+- **Industrial Stability**: Includes advanced Win32 focus management and high-process-priority execution.
 
-## 🛠️ Global Requirements
+## 🛠️ Global Prerequisites
 
-- **OS**: Windows 10 / 11 (x64)
-- **Environment**: Visual Studio 2022 / Windows Driver Kit (WDK) for build operations.
-- **Dependencies**: 
-  ```powershell
-  pip install sv-ttk tkinterdnd2 psutil
-  ```
+To run or build these tools, ensure your environment meets the following:
+- **OS**: Windows 10/11 (x64 Required).
+- **Toolchain**: Visual Studio 2022 + WDK (for driver-related features).
+- **Environment**: Python 3.10+ with `pip install sv-ttk tkinterdnd2 psutil`.
 
 ---
 
-## 👨‍💻 Developer Guide
-
-To release a new version of any tool:
-1. Complete your changes and commit them.
-2. Navigate to the tool's scripts directory (e.g., `cd "Driver Deck/scripts"`).
-3. Run `release.bat`.
-
-The system will automatically bump the version, update the changelog, sync with Git, and publish to GitHub Releases.
+## 👨‍💻 Release Guide
+To deploy a new version of any component:
+1. Commit your functional changes.
+2. Navigate to `scripts/` and run `release.bat`.
+3. The system will handle **Build -> Archive -> Tag -> Sync -> Publish** autonomously.
 
 ---
 *Internal Engineering Toolset - Realtek Semiconductor Corp.*
