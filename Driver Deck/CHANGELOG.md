@@ -1,12 +1,13 @@
-﻿## [1.2.1] - 2026-02-12
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## [1.2.1] - 2026-02-12
 ### Fixed
 - **Version Display**: Ensured the frozen executable correctly reads and displays version 1.2.1 from the internal bundle.
 - **Focus Reliability**: Finalized the global click recovery mechanism to prevent terminal focus lockups.
 
 ### Changed
 - **Release Optimization**: Transitioned to a fully automated release pipeline for improved deployment speed.
-
-All notable changes to this project will be documented in this file.
 
 ## [1.2.0] - 2026-02-12
 ### Fixed
@@ -34,4 +35,3 @@ All notable changes to this project will be documented in this file.
 - **UI Framework**: Modernized interface using `sv-ttk` and Win32 immersive styling.
 - **Terminal Integration**: Embedded Win32 console for direct command execution.
 - **Documentation**: Professional English README and automated CHANGELOG generation.
-

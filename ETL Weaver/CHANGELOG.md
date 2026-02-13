@@ -1,4 +1,7 @@
-﻿## [1.2.0] - 2026-02-13
+# Changelog
+All notable changes to this project will be documented in this file.
+
+## [1.2.0] - 2026-02-13
 ### Added
 - **Smart Persistence**: Split size and unit settings are now automatically saved in the background whenever changed.
 - **Editable Paths**: File path fields are now editable, allowing manual name adjustments without re-dragging.
@@ -33,10 +36,6 @@
 ### Changed
 - **Asset Naming**: Standardized executable name to ETLWeaver.exe (no spaces/dots).
 
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
 ## [1.0.0] - 2026-02-06
 ### Added
 - **Initial Release**: First professional release with stable ETL conversion engine.
@@ -46,6 +45,3 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Asset Naming**: Standardized executable name to `ETLWeaver.exe` (aligned with Driver Deck).
-
-
-
