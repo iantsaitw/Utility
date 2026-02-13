@@ -28,7 +28,9 @@ DEFAULT_SETTINGS = {
     "ui_font_size": 10,
     "log_font_family": "Consolas",
     "log_font_size": 10,
-    "pdb_path": "C:\\"
+    "pdb_path": "C:\\",
+    "split_size": 30,
+    "split_unit": "MB"
 }
 
 def load_settings():

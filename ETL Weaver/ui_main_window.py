@@ -42,8 +42,13 @@ class TextSplitterApp(TkinterDnD.Tk):
         self.pdb_path = tk.StringVar(value="")
         self.txt_path = tk.StringVar(value="")
         self.original_size = tk.StringVar(value="N/A")
-        self.split_size_value = tk.StringVar(value="30")
-        self.split_size_unit = tk.StringVar(value="MB")
+        
+        # Split Settings with Persistence
+        self.split_size_value = tk.StringVar(value=str(self.settings.get("split_size", 30)))
+        self.split_size_unit = tk.StringVar(value=self.settings.get("split_unit", "MB"))
+        self.split_size_value.trace_add("write", lambda *args: self._auto_save_split_settings())
+        self.split_size_unit.trace_add("write", lambda *args: self._auto_save_split_settings())
+        
         self.estimated_files = tk.StringVar(value="N/A")
         self.status = tk.StringVar(value="Ready to process files")
         self.txt_postfix = tk.StringVar(value="")
@@ -60,22 +65,30 @@ class TextSplitterApp(TkinterDnD.Tk):
 
         # Set Theme
         sv_ttk.set_theme(self.settings["theme"])
-        
         self.title(APP_TITLE)
-        try:
-            self.iconbitmap(resource_path("icon.ico"))
-        except Exception:
-            pass
+        try: self.iconbitmap(resource_path("icon.ico"))
+        except: pass
         
-        self.initial_width = 950
+        self.initial_width = 1000
         initial_height = 800
         self.geometry(f"{self.initial_width}x{initial_height}")
         self.resizable(True, True)
-        self.minsize(800, 600)
+        self.minsize(850, 650)
 
         self.create_widgets()
         self.update_styles()
         self.after_idle(self._initialize_app)
+
+    def _auto_save_split_settings(self):
+        """ Background save for split settings whenever changed """
+        try:
+            val = self.split_size_value.get()
+            if val.isdigit():
+                self.settings["split_size"] = int(val)
+                self.settings["split_unit"] = self.split_size_unit.get()
+                save_settings(self.settings)
+                self.update_estimated_files()
+        except: pass
 
     def _initialize_app(self):
         self._reset_pdb_path()
@@ -88,10 +101,6 @@ class TextSplitterApp(TkinterDnD.Tk):
         ui_font = (self.settings["ui_font_family"], self.settings["ui_font_size"])
         style = ttk.Style()
         style.configure(".", font=ui_font)
-        style.configure("TLabel", font=ui_font)
-        style.configure("TButton", font=ui_font)
-        style.configure("TEntry", font=ui_font)
-        style.configure("TCombobox", font=ui_font)
         style.configure("TLabelframe.Label", font=(self.settings["ui_font_family"], self.settings["ui_font_size"], "bold"))
         
         if theme == "dark":
@@ -123,13 +132,12 @@ class TextSplitterApp(TkinterDnD.Tk):
             self.log_text.config(state="disabled")
 
     def create_widgets(self):
-        # 1. Status Bar
+        # Status Bar
         status_bar = ttk.Frame(self, padding=(12, 3), style="Secondary.TFrame")
         status_bar.pack(side="bottom", fill="x")
         ttk.Label(status_bar, textvariable=self.status, font=(self.settings["ui_font_family"], 8, "italic"), style="Secondary.TLabel").pack(side="left")
         ttk.Label(status_bar, text=f"v{APP_VERSION}", font=(self.settings["ui_font_family"], 8), style="Secondary.TLabel").pack(side="right")
 
-        # 2. Main Scrollable Container
         main_container = ttk.Frame(self, padding=(20, 10, 20, 10))
         main_container.pack(side="top", fill="both", expand=True)
         main_container.columnconfigure(0, weight=1)
@@ -148,32 +156,34 @@ class TextSplitterApp(TkinterDnD.Tk):
             ttk.Label(sys_info_mini, text="RAM:", font=(self.settings["ui_font_family"], 8)).pack(side="left", padx=(10, 2))
             ttk.Label(sys_info_mini, textvariable=self.mem_details_text, font=(self.settings["ui_font_family"], 8, "bold")).pack(side="left")
 
-        # Workspace
+        # 1. Upper Workspace
         workspace = ttk.Frame(main_container)
-        workspace.grid(row=1, column=0, sticky="nsew")
+        workspace.grid(row=1, column=0, sticky="new")
         workspace.columnconfigure(0, weight=6)
         workspace.columnconfigure(1, weight=4)
-        workspace.rowconfigure(0, weight=1)
 
         left_col = ttk.Frame(workspace)
-        left_col.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        left_col.grid(row=0, column=0, sticky="new", padx=(0, 10))
         left_col.columnconfigure(0, weight=1)
+
+        self.create_drop_zone(left_col).grid(row=0, column=0, sticky="ew", pady=(0, 10))
+        self.create_file_info_panel(left_col).grid(row=1, column=0, sticky="ew", pady=(0, 10))
+        self.create_txt_settings_panel(left_col).grid(row=2, column=0, sticky="ew", pady=(0, 10))
+        self.create_action_buttons(left_col).grid(row=3, column=0, sticky="ew", pady=(0, 0))
 
         right_col = ttk.Frame(workspace)
         right_col.grid(row=0, column=1, sticky="nsew")
         right_col.columnconfigure(0, weight=1)
         right_col.rowconfigure(0, weight=1)
-
-        self.create_drop_zone(left_col).grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        self.create_file_info_panel(left_col).grid(row=1, column=0, sticky="ew", pady=(0, 10))
-        self.create_txt_settings_panel(left_col).grid(row=2, column=0, sticky="ew", pady=(0, 10))
-        self.create_action_buttons(left_col).grid(row=3, column=0, sticky="ew", pady=(5, 0))
-
         self.create_pdb_browser_panel(right_col).grid(row=0, column=0, sticky="nsew")
 
-        # Log
-        self.create_log_panel(main_container).grid(row=2, column=0, sticky="nsew", pady=(15, 0))
-        main_container.rowconfigure(2, weight=1)
+        # 2. Lower Log Panel
+        self.create_log_panel(main_container).grid(row=2, column=0, sticky="new", pady=(15, 0))
+        
+        # 3. Final Bottom Spacer
+        spacer = ttk.Frame(main_container)
+        spacer.grid(row=3, column=0, sticky="nsew")
+        main_container.rowconfigure(3, weight=1) # Spacer takes all remaining space
 
     def create_drop_zone(self, parent):
         drop_card = ttk.Frame(parent, padding=1, style="Card.TFrame")
@@ -196,7 +206,9 @@ class TextSplitterApp(TkinterDnD.Tk):
         labels = [("ETL:", self.etl_path), ("PDB:", self.pdb_path), ("TXT:", self.txt_path)]
         for i, (label, var) in enumerate(labels):
             ttk.Label(info_frame, text=label).grid(row=i, column=0, sticky="e", padx=(0, 8), pady=4)
-            ttk.Entry(info_frame, textvariable=var, state="readonly").grid(row=i, column=1, sticky="ew", pady=4)
+            ent = ttk.Entry(info_frame, textvariable=var)
+            ent.grid(row=i, column=1, sticky="ew", pady=4)
+            ent.bind("<KeyRelease>", lambda e: self._update_button_states())
         return info_frame
 
     def create_txt_settings_panel(self, parent):
@@ -265,7 +277,7 @@ class TextSplitterApp(TkinterDnD.Tk):
         lf = ttk.LabelFrame(parent, text=" Command Execution Log ", padding=12)
         lf.columnconfigure(0, weight=1)
         lf.rowconfigure(0, weight=1)
-        self.log_text = tk.Text(lf, wrap=tk.WORD, state="disabled", borderwidth=0, highlightthickness=0)
+        self.log_text = tk.Text(lf, wrap=tk.WORD, state="disabled", borderwidth=0, highlightthickness=0, height=10) # Set a fixed height
         self.log_text.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
         sb = ttk.Scrollbar(lf, orient="vertical", command=self.log_text.yview)
         sb.grid(row=0, column=1, sticky="ns", pady=(0, 10))
@@ -314,7 +326,12 @@ class TextSplitterApp(TkinterDnD.Tk):
             if path: pv.set(path)
         ttk.Button(path_frame, text="Browse", width=8, command=b_pdb).grid(row=0, column=1, sticky="e")
         def save():
-            self.settings.update({"theme": tv.get(), "ui_font_family": fv.get(), "ui_font_size": sv.get(), "pdb_path": pv.get()})
+            self.settings.update({
+                "theme": tv.get(), 
+                "ui_font_family": fv.get(), 
+                "ui_font_size": sv.get(), 
+                "pdb_path": pv.get()
+            })
             save_settings(self.settings)
             sv_ttk.set_theme(self.settings["theme"])
             sw.destroy()

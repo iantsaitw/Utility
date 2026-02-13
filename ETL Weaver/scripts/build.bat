@@ -30,6 +30,9 @@ python -m PyInstaller --noconfirm --onefile --windowed --noupx --name "%A_NAME%"
     --add-data "trace_tools;trace_tools" ^
     --add-data "%TK_PATH%;tkinterdnd2" ^
     --hidden-import "tkinterdnd2" ^
+    --hidden-import "ui_main_window" ^
+    --hidden-import "core_logic" ^
+    --hidden-import "config" ^
     -p . main.py
 
 if errorlevel 0 (
