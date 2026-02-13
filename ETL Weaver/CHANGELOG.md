@@ -1,4 +1,16 @@
-﻿## [1.1.1] - 2026-02-12
+﻿## [1.2.0] - 2026-02-13
+### Added
+- **Smart Persistence**: Split size and unit settings are now automatically saved in the background whenever changed.
+- **Editable Paths**: File path fields are now editable, allowing manual name adjustments without re-dragging.
+
+### Changed
+- **Compact Layout**: Refactored UI to a top-aligned compact design, providing more vertical space for the log panel.
+- **Themed UI**: Integrated modern themed scrollbars into the Command Execution Log.
+
+### Fixed
+- **Bundle Reliability**: Fixed ModuleNotFoundError issues in the standalone executable by optimizing internal search paths.
+
+## [1.1.1] - 2026-02-12
 ### Fixed
 - **UI Consistency**: Replaced legacy scrollbars in the Execution Log with modern themed ttk.Scrollbars for a unified look.
 - **Admin Limitations**: Verified stability across various privilege levels.
@@ -34,5 +46,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Asset Naming**: Standardized executable name to `ETLWeaver.exe` (aligned with Driver Deck).
+
 
 
