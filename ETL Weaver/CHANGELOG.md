@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-03-12
+### Fixed
+- **Split Logic**: Resolved `Split TXT` functionality failure caused by parameter signature mismatch in `core_logic.py`.
+- **UI Responsiveness**: Refactored the split operation to run in a background thread, preventing UI freezing during large file processing.
+- **State Recovery**: Improved button state management to ensure all controls are properly re-enabled after a failed conversion or split operation.
+
 ## [1.2.0] - 2026-02-13
 ### Added
 - **Smart Persistence**: Split size and unit settings are now automatically saved in the background whenever changed.

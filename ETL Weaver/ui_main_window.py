@@ -413,14 +413,19 @@ class TextSplitterApp(TkinterDnD.Tk):
         self.convert_button.config(state="disabled")
         self.split_button.config(state="disabled")
         self.status.set("Converting...")
-        cb = { 
-            'log': self.log_message, 
-            'status': lambda m: self.after(0, self.status.set, m), 
-            'success': lambda p: self.after(0, self.process_txt_file, p), 
-            'failure': lambda m: self.after(0, self.status.set, m) 
+        cb = {
+            'log': self.log_message,
+            'status': lambda m: self.after(0, self.status.set, m),
+            'success': lambda p: self.after(0, self.process_txt_file, p),
+            'failure': lambda m: self.after(0, self._on_operation_failure, m)
         }
         threading.Thread(target=core_logic.run_conversion, args=(self.etl_path.get(), self.pdb_path.get(), self.txt_postfix.get(), cb), daemon=True).start()
 
+    def _on_operation_failure(self, msg):
+        """ Handles failures for both conversion and splitting """
+        self.status.set("Error occurred")
+        self._update_button_states()
+        messagebox.showerror("Error", msg)
     def update_system_info(self):
         if not self.show_sys_info: return
         cpu = psutil.cpu_percent()
@@ -456,9 +461,25 @@ class TextSplitterApp(TkinterDnD.Tk):
         except: self.estimated_files.set("N/A")
 
     def start_split_thread(self):
+        self.log_message("\n--- Starting File Splitting ---\n")
+        self.convert_button.config(state="disabled")
+        self.split_button.config(state="disabled")
         self.status.set("Splitting...")
-        success = core_logic.run_file_splitting(self.txt_path.get(), int(self.split_size_value.get()), self.split_size_unit.get(), self.txt_postfix.get(), {'status': self.status.set})
-        if success: messagebox.showinfo("Success", "Split complete!")
+        cb = {
+            'log': self.log_message,
+            'status': lambda m: self.after(0, self.status.set, m),
+            'success': lambda m: self.after(0, self._on_split_success, m),
+            'failure': lambda m: self.after(0, self._on_operation_failure, m)
+        }
+        threading.Thread(target=core_logic.run_file_splitting, 
+                         args=(self.txt_path.get(), int(self.split_size_value.get()), 
+                               self.split_size_unit.get(), self.txt_postfix.get(), cb), 
+                         daemon=True).start()
+
+    def _on_split_success(self, msg):
+        self.status.set(msg)
+        self._update_button_states()
+        messagebox.showinfo("Success", msg)
 
     def rename_txt_file(self):
         old_path = self.txt_path.get()

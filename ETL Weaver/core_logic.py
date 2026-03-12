@@ -72,7 +72,7 @@ def run_conversion(etl_path, pdb_path, postfix, callbacks):
         callbacks['log'](f"\n--- FATAL ERROR: {e} ---\n")
         callbacks['failure'](str(e))
 
-def run_file_splitting(txt_path, split_size, unit, estimated_files, postfix, callbacks):
+def run_file_splitting(txt_path, split_size, unit, postfix, callbacks):
     try:
         import math
         chunk_size = (split_size * 1024) if unit == "KB" else (split_size * 1024 * 1024)

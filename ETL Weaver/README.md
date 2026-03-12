@@ -100,4 +100,4 @@ ETL Weaver/
 | **Import Error** | Run `scripts/build.bat` to ensure all config constants are bundled. |
 
 ---
-*Status: Production Ready | v1.1.1*
+*Status: Production Ready | v1.2.1*
