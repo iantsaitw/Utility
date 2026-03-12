@@ -22,7 +22,7 @@
 | Tool | Version | Direct Download | History |
 | :--- | :--- | :--- | :--- |
 | **Driver Deck** | [![v1.2.1](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=Driver_Deck-v*&label=v1.2.1&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./Driver%20Deck/CHANGELOG.md) |
-| **ETL Weaver** | [![v1.1.0](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=v1.1.0&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./ETL%20Weaver/CHANGELOG.md) |
+| **ETL Weaver** | [![v1.2.1](https://img.shields.io/github/v/tag/iantsaitw/Utility?filter=ETL_Weaver-v*&label=v1.2.1&color=green&style=flat-square)](https://github.com/iantsaitw/Utility/releases) | [📦 Download EXE](https://github.com/iantsaitw/Utility/releases) | [📜 Changelog](./ETL%20Weaver/CHANGELOG.md) |
 
 ---
 
